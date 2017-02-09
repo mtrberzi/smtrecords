@@ -1,0 +1,5 @@
+dbtype = "postgresql"
+username = "bogus"
+password = "bogus"
+dbhost = "localhost"
+dbname = "strings"
