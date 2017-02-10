@@ -1,8 +1,9 @@
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 import config
 
@@ -44,3 +45,34 @@ class Case(Base):
         return "<Case(path='%s')>" % (path,)
 
 Benchmark.cases = relationship("Case", order_by=Case.id, back_populates="benchmark", cascade="all, delete, delete-orphan")
+
+# A Solver has an ID and a solver name, and a list of versions
+
+class Solver(Base):
+    __tablename__ = 'solvers'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+
+    def __repr__(self):
+        return "<Solver(%s)>" % (name,)
+
+# A SolverVersion has an ID, a Solver ID, a version name,
+# a relative filesystem path, a creation date, and a SHA256 checksum
+
+class SolverVersion(Base):
+    __tablename__ = 'solverversions'
+
+    id = Column(Integer, primary_key=True)
+    solver_id = Column(Integer, ForeignKey('solvers.id'))
+    version = Column(String, nullable=False)
+    path = Column(String, nullable=True)
+    creationdate = Column(DateTime(timezone=False), server_default=func.now())
+    checksum = Column(String, nullable=True)
+
+    solver = relationship("Solver", back_populates="versions")
+
+    def __repr__(self):
+        return "<SolverVersion(solver=%s, version=%s)>" % (solver.name, version)
+
+Solver.versions = relationship(SolverVersion, order_by=SolverVersion.creationdate, back_populates="solver")
