@@ -30,6 +30,30 @@ def process_benchmark(path):
         hasher.update(buf)
     return (hasher.hexdigest(), status)
 
+def ensure_subdirectories(remotebase, path, sftp):
+    if path == '':
+        return
+    check = remotebase + "/" + path
+    try:
+        sftp.stat(check)
+    except FileNotFoundError:
+        (head, tail) = os.path.split(path)
+        ensure_subdirectories(remotebase, head, sftp)
+        sftp.mkdir(check)
+
+def read_back_and_confirm(sftp, remotecase, expectedhash):
+    try:
+        hasher = hashlib.sha256()
+        with sftp.file(remotecase, 'rb') as remotefile:
+            buf = remotefile.read()
+            hasher.update(buf)
+        if hasher.hexdigest() != expectedhash:
+            return False
+        # OK
+        return True
+    except:
+        return False
+
 ## Entry point
 
 if len(sys.argv) != 3:
@@ -79,8 +103,13 @@ except Exception as e:
 
 sftp = ssh.open_sftp()
 remotepath = "/work/benchmarks/%s" % (name,)
-sftp.mkdir(remotepath)
-print("Created %s" % (remotepath,))
+
+# the remote path may already exist if we are resuming a previous attempt
+try:
+    sftp.stat(remotepath)
+except FileNotFoundError:
+    sftp.mkdir(remotepath)
+    print("Created %s" % (remotepath,))
 
 print("Copying files", end='', flush=True)
 
@@ -97,8 +126,42 @@ for root, dirs, files in os.walk(path):
             (checksum, status) = process_benchmark(fullPathToCase)
             case = dbobj.Case(path=casename, checksum=checksum, status=status)
             benchmark.cases.append(case)
-            sftp.put(fullPathToCase, remotepath + "/" + casename)
+            (head, tail) = os.path.split(casename)
+            ensure_subdirectories(remotepath, head, sftp)
+            remotecase = remotepath + "/" + casename
+            # see if the file already exists
+            exists = False
+            try:
+                sftp.stat(remotecase)
+                exists = True
+                if not read_back_and_confirm(sftp, remotecase, checksum):
+                    print("Failed to verify %s! Aborting." % (remotecase,))
+                    sftp.close()
+                    ssh.close()
+                    session.rollback()
+                    sys.exit(1)
+            except FileNotFoundError:
+                exists = False
+                
+            try:
+                if not exists:
+                    sftp.put(fullPathToCase, remotecase)
+                    if not read_back_and_confirm(sftp, remotecase, checksum):
+                        print("Failed to verify %s! Aborting." % (remotecase,))
+                        sftp.close()
+                        ssh.close()
+                        session.rollback()
+                        sys.exit(1)
+            except Exception as e:
+                print("An exception occurred while copying %s:" % (casename,))
+                print(e)
+                sftp.close()
+                ssh.close()
+                session.rollback()
+                sys.exit(1)
             print(".", end='', flush=True)
+            if ncases % 100 == 0:
+                print("(%d)" % (ncases,))
 sftp.close()
 ssh.close()
 print("")
