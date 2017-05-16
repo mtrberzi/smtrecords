@@ -1,7 +1,7 @@
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Boolean, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -42,7 +42,7 @@ class Case(Base):
     benchmark = relationship("Benchmark", back_populates="cases") 
 
     def __repr__(self):
-        return "<Case(path='%s')>" % (path,)
+        return "<Case(path='%s')>" % (self.path,)
 
 Benchmark.cases = relationship("Case", order_by=Case.id, back_populates="benchmark", cascade="all, delete, delete-orphan")
 
@@ -55,7 +55,7 @@ class Solver(Base):
     name = Column(String, nullable=False)
 
     def __repr__(self):
-        return "<Solver(%s)>" % (name,)
+        return "<Solver(%s)>" % (self.name,)
 
 # A SolverVersion has an ID, a Solver ID, a version name,
 # a relative filesystem path, a creation date, and a SHA256 checksum
@@ -73,6 +73,48 @@ class SolverVersion(Base):
     solver = relationship("Solver", back_populates="versions")
 
     def __repr__(self):
-        return "<SolverVersion(solver=%s, version=%s)>" % (solver.name, version)
+        return "<SolverVersion(solver=%s, version=%s)>" % (self.solver.name, self.version)
 
-Solver.versions = relationship(SolverVersion, order_by=SolverVersion.creationdate, back_populates="solver")
+Solver.versions = relationship("SolverVersion", order_by=SolverVersion.creationdate, back_populates="solver")
+
+# A Run has an ID, a start date/time, a Benchmark ID, a SolverVersion ID, a command line,
+# and a completion status (true=complete, false=pending).
+
+class Run(Base):
+    __tablename__ = 'runs'
+
+    id = Column(Integer, primary_key=True)
+    startdate = Column(DateTime(timezone=False), server_default=func.now())
+    benchmark_id = Column(Integer, ForeignKey('benchmarks.id'))
+    solver_version_id = Column(Integer, ForeignKey('solverversions.id'))
+    command_line = Column(String, nullable=False)
+    complete = Column(Boolean, nullable=False, default=False)
+
+    benchmark = relationship("Benchmark", back_populates="runs")
+    solver_version = relationship("SolverVersion", back_populates="runs")
+
+Benchmark.runs = relationship("Run", order_by=Run.id, back_populates="benchmark", cascade="all, delete, delete-orphan")
+SolverVersion.runs = relationship("Run", order_by=Run.id, back_populates="solver_version", cascade="all, delete, delete-orphan")
+
+# A RunResult has an ID, a Run ID, a Case ID, a completion status (true=complete,false=pending),
+# a solver status, a solver output, and a completion time (INTEGER, MILLISECONDS)
+
+class RunResult(Base):
+    __tablename__ = 'runresults'
+
+    id = Column(Integer, primary_key=True)
+    run_id = Column(Integer, ForeignKey('runs.id'))
+    case_id = Column(Integer, ForeignKey('cases.id'))
+    complete = Column(Boolean, default=False)
+    solver_status = Column(String, nullable=True)
+    solver_output = Column(Text, nullable=True)
+    solver_stderr = Column(Text, nullable=True)
+    completion_time = Column(Integer, nullable=True, default=0)
+
+    run = relationship("Run", back_populates="results")
+    case = relationship("Case", back_populates="results")
+
+Run.results = relationship("RunResult", order_by = RunResult.id, back_populates="run", cascade="all, delete, delete-orphan")
+Case.results = relationship("RunResult", order_by = RunResult.id, back_populates="case", cascade="all, delete, delete-orphan")
+    
+    

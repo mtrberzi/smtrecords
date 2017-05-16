@@ -72,7 +72,8 @@ if session.query(dbobj.Benchmark).filter(dbobj.Benchmark.name == name).count() >
     print("Benchmark '" + name + "' already exists.")
     sys.exit(1)
 
-benchmark = dbobj.Benchmark(name=name, path=path)
+remotepath = "/work/benchmarks/%s" % (name,)
+benchmark = dbobj.Benchmark(name=name, path=remotepath)
 
 print("Opening connection to %s for file transfer" % (config.dbhost,))
 
@@ -102,7 +103,7 @@ except Exception as e:
     sys.exit(1)
 
 sftp = ssh.open_sftp()
-remotepath = "/work/benchmarks/%s" % (name,)
+
 
 # the remote path may already exist if we are resuming a previous attempt
 try:
