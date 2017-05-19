@@ -96,8 +96,8 @@ class Run(Base):
 Benchmark.runs = relationship("Run", order_by=Run.id, back_populates="benchmark", cascade="all, delete, delete-orphan")
 SolverVersion.runs = relationship("Run", order_by=Run.id, back_populates="solver_version", cascade="all, delete, delete-orphan")
 
-# A RunResult has an ID, a Run ID, a Case ID, a completion status (true=complete,false=pending),
-# a solver status, a solver output, and a completion time (INTEGER, MILLISECONDS)
+# completion status (true=complete,false=pending)
+# completion time (INTEGER, MILLISECONDS)
 
 class RunResult(Base):
     __tablename__ = 'runresults'
@@ -110,6 +110,7 @@ class RunResult(Base):
     solver_output = Column(Text, nullable=True)
     solver_stderr = Column(Text, nullable=True)
     completion_time = Column(Integer, nullable=True, default=0)
+    hostname = Column(String, nullable=True)
 
     run = relationship("Run", back_populates="results")
     case = relationship("Case", back_populates="results")

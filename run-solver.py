@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from __future__ import absolute_import
+
 import dbobj
 import config
 
@@ -9,8 +11,11 @@ from sqlalchemy.orm.exc import MultipleResultsFound
 import sys
 import os
 import os.path
-import hashlib
-import re
+
+#from celery import Celery
+#import tasks
+
+import runmanagement
 
 # Note that this command isn't idempotent; it's perfectly fair to run the same version of a solver
 # on a benchmark multiple times.
@@ -31,6 +36,9 @@ for i in range(4, len(sys.argv)):
 engine = dbobj.mk_engine()
 Session = sessionmaker(bind=engine)
 session = Session()
+
+#celeryApp = Celery('smtrecords', include=['smtrecords.tasks'])
+#celeryApp.config_from_object('celeryconfig')
 
 # check if this solver, version, and benchmark exist
 
@@ -57,13 +65,16 @@ except MultipleResultsFound as e:
     sys.exit(1)
    
 # create Run object
-#solverRun = dbobj.Run(solver_version = solver, benchmark = benchmark, command_line = " ".join(solverArguments), complete=False)
-solverRun = dbobj.Run(benchmark=benchmark, solver_version=solver, command_line="")
+solverRun = dbobj.Run(benchmark=benchmark, solver_version=solver, command_line=" ".join(solverArguments), complete=False)
 # create a Result object for each case
 for benchmarkCase in benchmark.cases:
-    result = dbobj.RunResult(run = solverRun, case = benchmarkCase, complete=False, solver_status=None, solver_output=None, solver_stderr=None, completion_time=None)
+    result = dbobj.RunResult(run = solverRun, case = benchmarkCase, complete=False, solver_status=None, solver_output=None, solver_stderr=None, completion_time=None, hostname=None)
 
 session.commit()
-print("Scheduled run of %s for %s-%s." % (benchmarkName, solverName, solverVersionName))
+print("Scheduled run of {} for {}-{} (ID {}).".format(benchmarkName, solverName, solverVersionName, solverRun.id))
 
-# TODO launch celery tasks
+# since we've created the entries for the run, we can use the resumption mechanism to start it for real
+
+runmanagement.resume(session, solverRun)
+print("Complete.")
+runmanagement.report(session, solverRun)
