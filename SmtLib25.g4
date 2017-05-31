@@ -6,7 +6,10 @@ smtfile : script | response;
 
 script : command* ;
 
-option : 'produce-models' B_VALUE ;
+option :
+       ':produce-models' B_VALUE
+       | ':auto-config' B_VALUE
+       ;
 
 command :
         '(' 'assert' term ')'
