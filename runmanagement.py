@@ -86,14 +86,20 @@ def report(session, run):
                             invalidCases.append(r)
         print("Validated against:", end='')
         for s in validationSolversUsed:
-            print(s + " ", end='')
+            print(" " + s, end='')
         print("")
         print("Total number of validation checks: {}".format(nValidations))
         print("VALID: {} INVALID: {} ERROR: {}".format(nValidationSuccesses, nValidationFailures, nValidationErrors))
         if invalidCases:
             print("Invalid cases:")
-            for r in invalidCases:
-                print(r.case.path)
+            for r in invalidCases: # r : RunResult
+                desc = "{} : {}".format(r.case.path, r.solver_status)
+                for v in r.validation_results:
+                    response = v.response
+                    if r.solver_status == 'sat' and response == 'unsat':
+                        response = 'unsat-with-model'
+                    desc += " | {} : {}".format(v.validation_solver.name, response)
+                print(desc)
         if errorCases:
             print("Errors occurred while validating:")
             for r in errorCases:
