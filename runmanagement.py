@@ -59,7 +59,45 @@ def report(session, run):
         timeF = float(totalTime) / 1000.0
         timeNoTimeoutF = float(totalTimeWithoutTimeouts) / 1000.0
         print("Total time: (without timeouts) {:.3f} (with timeouts) {:.3f}".format(timeNoTimeoutF, timeF))
-        # TODO validation report
+
+        nValidations = 0
+        nValidationSuccesses = 0
+        nValidationFailures = 0
+        nValidationErrors = 0
+
+        invalidCases = []
+        errorCases = []
+        validationSolversUsed = set()
+
+        for r in run.results:
+            for v in r.validation_results:
+                nValidations += 1
+                validationSolversUsed.add(v.validation_solver.name)
+                if not v.success_status:
+                    nValidationErrors += 1
+                    if r not in errorCases:
+                        errorCases.append(r)
+                else:
+                    if v.pass_status:
+                        nValidationSuccesses += 1
+                    else:
+                        nValidationFailures += 1
+                        if r not in invalidCases:
+                            invalidCases.append(r)
+        print("Validated against:", end='')
+        for s in validationSolversUsed:
+            print(s + " ", end='')
+        print("")
+        print("Total number of validation checks: {}".format(nValidations))
+        print("VALID: {} INVALID: {} ERROR: {}".format(nValidationSuccesses, nValidationFailures, nValidationErrors))
+        if invalidCases:
+            print("Invalid cases:")
+            for r in invalidCases:
+                print(r.case.path)
+        if errorCases:
+            print("Errors occurred while validating:")
+            for r in errorCases:
+                print(r.case.path)
             
 def resume(session, run):
     if run.complete:
@@ -92,12 +130,61 @@ def resume(session, run):
         r.completion_time = int(round(result.runtime * 1000)) # convert to milliseconds
         r.hostname = platform.node()
         session.commit()
+    # check existence of validation entry for all runs
+    for r in run.results:
+        if r.complete and (r.solver_status == 'sat' or r.solver_status == 'unsat'):
+            # ensure there is a validation entry for every validation solver
+            for validation_solver in session.query(dbobj.ValidationSolver).order_by(dbobj.ValidationSolver.id):
+                ret = session.query(dbobj.ValidationResult).filter(dbobj.ValidationResult.result_id == r.id).filter(dbobj.ValidationResult.validation_solver_id == validation_solver.id).one_or_none()
+                if not ret:
+                    # create entry
+                    vResult = dbobj.ValidationResult(result=r, validation_solver=validation_solver, running_status=False, success_status=False, pass_status=False, response="")
+                    session.add(vResult)
+        session.commit()
+
+    # perform all outstanding validation tasks
+    for r in run.results:
+        if r.complete and (r.solver_status == 'sat' or r.solver_status == 'unsat'):
+            for validationRun in r.validation_results:
+                if not validationRun.running_status:
+                    # for now we run validation solvers locally; TODO celery integration
+                    # construct full path to instance
+                    instancepath = os.path.join(r.case.benchmark.path, r.case.path)
+                    solverpath = os.path.join(config.validationsolverbase, validationRun.validation_solver.path)
+
+                    if not os.path.isfile(instancepath):
+                        print("ERROR: instance not found at {}".format(instancepath))
+                        session.rollback()
+                        continue
+                    if not os.path.isfile(solverpath):
+                        print("ERROR: validation solver binary not found at {}".format(solverpath))
+                        session.rollback()
+                        continue
+
+                    # TODO add solver command line to database
+                    args = [solverpath]
+                    expectedResult = r.solver_status
+                    testOutput = r.solver_output
+                    validationResult = tasks.validate_result(args, instancepath, expectedResult, testOutput)
+
+                    validationRun.running_status = True
+                    validationRun.success_status = validationResult.validationRunSuccessful
+                    validationRun.pass_status = validationResult.validationPassed
+                    validationRun.response = validationResult.response
+
+                    session.add(validationRun)
+                    session.commit()
+        
     # now double-check that all results are in
     done = True
     for r in run.results:
         if not r.complete:
             done = False
             break
+        for v in r.validation_results:
+            if not v.running_status:
+                done = False
+                break
     if done:
         run.complete = True
         session.commit()
