@@ -25,12 +25,16 @@ def read_back_and_confirm(sftp, remotePath, checksum):
 
 ## Entry point
 
-if len(sys.argv) != 3:
-    print("Usage: " + sys.argv[0] + " solver-name /path/to/binary")
+if len(sys.argv) < 3:
+    print("Usage: " + sys.argv[0] + " solver-name /path/to/binary [arguments...]")
     sys.exit(1)
 
 solvername = sys.argv[1]
 solverpath = sys.argv[2]
+if len(sys.argv) > 3:
+    solverargs = " ".join(sys.argv[3:])
+else:
+    solverargs = ""
 
 engine = dbobj.mk_engine()
 Session = sessionmaker(bind=engine)
@@ -60,7 +64,7 @@ except Exception as e:
 print("checksum %s" % (checksum,))
 
 # path is a relative path
-vSolverEntry = dbobj.ValidationSolver(name=solvername, path=solvername, checksum=checksum)
+vSolverEntry = dbobj.ValidationSolver(name=solvername, path=solvername, checksum=checksum, command_line=solverargs)
 remoteFilename = os.path.join(config.validationsolverbase, solvername)
 
 if config.remotecopy:
