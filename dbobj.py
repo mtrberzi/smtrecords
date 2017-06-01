@@ -98,6 +98,7 @@ SolverVersion.runs = relationship("Run", order_by=Run.id, back_populates="solver
 
 # completion status (true=complete,false=pending)
 # completion time (INTEGER, MILLISECONDS)
+# validation results (as below)
 
 class RunResult(Base):
     __tablename__ = 'runresults'
@@ -117,5 +118,43 @@ class RunResult(Base):
 
 Run.results = relationship("RunResult", order_by = RunResult.id, back_populates="run", cascade="all, delete, delete-orphan")
 Case.results = relationship("RunResult", order_by = RunResult.id, back_populates="case", cascade="all, delete, delete-orphan")
-    
-    
+
+# A ValidationSolver has an ID, a solver name, a relative filesystem path,
+# and a SHA256 checksum
+
+class ValidationSolver(Base):
+    __tablename__ = 'validationsolvers'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+    path = Column(String, nullable=False)
+    checksum = Column(String, nullable=True)
+
+    def __repr__(self):
+        return "<ValidationSolver(%s)>" % (self.name, )
+
+# A ValidationResult has an ID, a RunResult ID, a ValidationSolver ID,
+# a running status (true=attempted to run false=not run yet),
+# a success status (true=success false=error),
+# a pass status (true=pass false=not pass)
+# a response (string)
+
+class ValidationResult(Base):
+    __tablename__ = 'validationresults'
+
+    id = Column(Integer, primary_key=True)
+    result_id = Column(Integer, ForeignKey('runresults.id'))
+    validation_solver_id = Column(Integer, ForeignKey('validationsolvers.id'))
+
+    running_status = Column(Boolean, default=False)
+    success_status = Column(Boolean, default=False)
+    pass_status = Column(Boolean, default=False)
+    response = Column(String, default="")
+
+    result = relationship("RunResult", back_populates="validation_results")
+    validation_solver = relationship("ValidationSolver")
+
+    def __repr__(self):
+        return "<ValidationResult(result={}, solver={}, running:{}, success:{}, pass:{})>".format(self.result.id, self.validation_solver.name, self.running_status, self.success_status, self.pass_status)
+
+RunResult.validation_results = relationship("ValidationResult", order_by=ValidationResult.id, back_populates="result")

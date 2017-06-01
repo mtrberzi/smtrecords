@@ -70,15 +70,15 @@ except Exception as e:
 print("checksum %s" % (checksum,))
 
 solverFilename = os.path.basename(solverpath)
-remoteBaseDir = "/work/solvers"
+remoteBaseDir = config.solverbase
 remoteSolverDir = remoteBaseDir + "/" + solvername
 remoteSolverPath = solvername + "/" + solvername + "-" + version
 
-print("Opening connection to %s for file transfer" % (config.dbhost,))
+print("Opening connection to %s for file transfer" % (config.remotehost,))
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 try:
-    ssh.connect(config.dbhost)
+    ssh.connect(config.remotehost)
 except Exception as e:
     print("An exception occurred while connecting:")
     print(e)
