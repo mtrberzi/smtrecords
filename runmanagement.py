@@ -121,7 +121,7 @@ def resume(session, run):
             session.rollback()
             continue
         
-        args = r.run.command_line.split(" ")
+        args = r.run.command_line.split(" ") # TODO this doesn't properly allow quoted args, etc
         result = tasks.run_smtlib_solver(solverpath, instancepath, 20, args)
         r.complete = True
         r.solver_status = result.result
@@ -162,7 +162,10 @@ def resume(session, run):
                         continue
 
                     # TODO add solver command line to database
+                    cli = validationRun.validation_solver.command_line.split(" ") # TODO this doesn't allow quoted strings, etc.
                     args = [solverpath]
+                    for x in cli:
+                        args.append(x)
                     expectedResult = r.solver_status
                     testOutput = r.solver_output
                     validationResult = tasks.validate_result(args, instancepath, expectedResult, testOutput)

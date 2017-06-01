@@ -7,8 +7,8 @@ smtfile : script | response;
 script : command* ;
 
 option :
-       ':produce-models' B_VALUE
-       | ':auto-config' B_VALUE
+       ':produce-models' boolean
+       | ':auto-config' boolean
        ;
 
 command :
@@ -29,8 +29,10 @@ fun_def : SYMBOL '(' sorted_var* ')' sort term ;
 /** General Tokens **/
 
 INTEGER : '0' | [1-9][0-9]* ;
+B_VALUE : 'true' | 'false' ;
 
 numeral : INTEGER;
+boolean : B_VALUE;
 
 STRINGCONSTANT : '"' (QUOTEESCAPE|.)*? '"' ;
 fragment QUOTEESCAPE : '""' ;
@@ -94,5 +96,4 @@ get_model_response : '(' 'model' model_response* ')' ;
 
 model_response : '(' 'define-fun' fun_def ')' ;
 
-B_VALUE : 'true' | 'false' ;
 WS: [ \n\t\r]+ -> skip;

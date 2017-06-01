@@ -129,6 +129,7 @@ class ValidationSolver(Base):
     name = Column(String, nullable=False)
     path = Column(String, nullable=False)
     checksum = Column(String, nullable=True)
+    command_line = Column(String, nullable=False, default="")
 
     def __repr__(self):
         return "<ValidationSolver(%s)>" % (self.name, )

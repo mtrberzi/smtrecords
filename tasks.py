@@ -140,6 +140,9 @@ class CommandListVisitor(SmtLib25Visitor):
 
     def visitTerm(self, ctx):
         return self.generic_string_conversion(ctx)
+
+    def visitOption(self, ctx):
+        return self.generic_string_conversion(ctx)
             
 def get_process_children(pid):
     p = subprocess.Popen('ps --no-headers -o pid --ppid %d' % pid, shell = True,stdout = subprocess.PIPE, stderr = subprocess.PIPE)
