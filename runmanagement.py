@@ -133,6 +133,7 @@ def resume(session, run):
             args = r.run.command_line.split(" ") # TODO this doesn't properly allow quoted args, etc
         else:
             args = []
+        print(r.case.path)
         result = tasks.run_smtlib_solver(solverpath, instancepath, 20, args)
         r.complete = True
         r.solver_status = result.result
