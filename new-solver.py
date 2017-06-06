@@ -11,6 +11,7 @@ import os.path
 import hashlib
 import paramiko
 import dateutil.parser
+import shutil
 
 def read_back_and_confirm(sftp, remotePath, checksum):
     try:
@@ -74,44 +75,58 @@ remoteBaseDir = config.solverbase
 remoteSolverDir = remoteBaseDir + "/" + solvername
 remoteSolverPath = solvername + "/" + solvername + "-" + version
 
-print("Opening connection to %s for file transfer" % (config.remotehost,))
-ssh = paramiko.SSHClient()
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-try:
-    ssh.connect(config.remotehost)
-except Exception as e:
-    print("An exception occurred while connecting:")
-    print(e)
-    session.rollback()
-    sys.exit(1)
-sftp = ssh.open_sftp()
+if config.remotecopy:
 
-try:
-    sftp.stat(remoteSolverDir)
-except FileNotFoundError:
-    sftp.mkdir(remoteSolverDir)
+    print("Opening connection to %s for file transfer" % (config.remotehost,))
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    try:
+        ssh.connect(config.remotehost)
+    except Exception as e:
+        print("An exception occurred while connecting:")
+        print(e)
+        session.rollback()
+        sys.exit(1)
+    sftp = ssh.open_sftp()
 
-try:
-    sftp.put(solverpath, remoteBaseDir + "/" + remoteSolverPath)
-    if not read_back_and_confirm(sftp, remoteBaseDir + "/" + remoteSolverPath, checksum):
-        print("Failed to verify solver! Removing file and aborting.")
-        try:
-            #sftp.remove(remoteBaseDir + "/" + remoteSolverPath)
-            pass
-        except:
-            pass
+    try:
+        sftp.stat(remoteSolverDir)
+    except FileNotFoundError:
+        sftp.mkdir(remoteSolverDir)
+
+    try:
+        sftp.put(solverpath, remoteBaseDir + "/" + remoteSolverPath)
+        if not read_back_and_confirm(sftp, remoteBaseDir + "/" + remoteSolverPath, checksum):
+            print("Failed to verify solver! Removing file and aborting.")
+            try:
+                #sftp.remove(remoteBaseDir + "/" + remoteSolverPath)
+                pass
+            except:
+                pass
+            sftp.close()
+            ssh.close()
+            session.rollback()
+            sys.exit(1)
+    except Exception as e:
+        print("Could not copy solver to remote server:")
+        print(e)
         sftp.close()
         ssh.close()
         session.rollback()
         sys.exit(1)
-except Exception as e:
-    print("Could not copy solver to remote server:")
-    print(e)
     sftp.close()
     ssh.close()
-    session.rollback()
-    sys.exit(1)
-
+else: # config.remotecopy = False
+    dst = os.path.join(remoteBaseDir, remoteSolverPath)
+    print("Copying solver to {}".format(dst))
+    try:
+        shutil.copyfile(solver, dst)
+    except Exception as e:
+        print("Failed to copy solver:")
+        print(e)
+        session.rollback()
+        sys.exit(1)
+    
 solverVersion = None
 if creationDate is None:
     solverVersion = dbobj.SolverVersion(version=version, path=remoteSolverPath, checksum=checksum)
@@ -119,7 +134,5 @@ else:
     solverVersion = dbobj.SolverVersion(version=version, path=remoteSolverPath, checksum=checksum, creationdate=creationDate)
 solverClass.versions.append(solverVersion)
 
-sftp.close()
-ssh.close()
 session.commit()
 print("Created solver %s-%s." % (solvername, version))
