@@ -11,6 +11,7 @@ import os.path
 import hashlib
 import re
 import paramiko
+import shutil
 
 re_status = re.compile("set-info\s+:status\s+(\w+)")
 
@@ -75,98 +76,136 @@ if session.query(dbobj.Benchmark).filter(dbobj.Benchmark.name == name).count() >
 remotepath = "/work/benchmarks/%s" % (name,)
 benchmark = dbobj.Benchmark(name=name, path=remotepath)
 
-print("Opening connection to %s for file transfer" % (config.dbhost,))
+if config.remotecopy:
 
-ssh = paramiko.SSHClient()
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-try:
-    ssh.connect(config.dbhost)
-except paramiko.BadHostKeyException as e:
-    print("Bad host key:")
-    print(e)
-    session.rollback()
-    sys.exit(1)
-except paramiko.AuthenticationException as e:
-    print("Authentication failure:")
-    print(e)
-    session.rollback()
-    sys.exit(1)
-except paramiko.SSHException as e:
-    print("SSH connection error:")
-    print(e)
-    session.rollback()
-    sys.exit(1)
-except Exception as e:
-    print("An exception occurred while connecting:")
-    print(e)
-    session.rollback()
-    sys.exit(1)
+    print("Opening connection to %s for file transfer" % (config.dbhost,))
 
-sftp = ssh.open_sftp()
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    try:
+        ssh.connect(config.dbhost)
+    except paramiko.BadHostKeyException as e:
+        print("Bad host key:")
+        print(e)
+        session.rollback()
+        sys.exit(1)
+    except paramiko.AuthenticationException as e:
+        print("Authentication failure:")
+        print(e)
+        session.rollback()
+        sys.exit(1)
+    except paramiko.SSHException as e:
+        print("SSH connection error:")
+        print(e)
+        session.rollback()
+        sys.exit(1)
+    except Exception as e:
+        print("An exception occurred while connecting:")
+        print(e)
+        session.rollback()
+        sys.exit(1)
+
+    sftp = ssh.open_sftp()
 
 
-# the remote path may already exist if we are resuming a previous attempt
-try:
-    sftp.stat(remotepath)
-except FileNotFoundError:
-    sftp.mkdir(remotepath)
-    print("Created %s" % (remotepath,))
+    # the remote path may already exist if we are resuming a previous attempt
+    try:
+        sftp.stat(remotepath)
+    except FileNotFoundError:
+        sftp.mkdir(remotepath)
+        print("Created %s" % (remotepath,))
 
-print("Copying files", end='', flush=True)
+    print("Copying files", end='', flush=True)
 
-# iterate over the given path, look for files ending in .smt2
+    # iterate over the given path, look for files ending in .smt2
 
-ncases = 0
+    ncases = 0
 
-for root, dirs, files in os.walk(path):
-    for f in files:
-        if f.endswith(".smt2"):
-            fullPathToCase = os.path.join(root, f)
-            casename = os.path.relpath(fullPathToCase, path)
-            ncases += 1
-            (checksum, status) = process_benchmark(fullPathToCase)
-            case = dbobj.Case(path=casename, checksum=checksum, status=status)
-            benchmark.cases.append(case)
-            (head, tail) = os.path.split(casename)
-            ensure_subdirectories(remotepath, head, sftp)
-            remotecase = remotepath + "/" + casename
-            # see if the file already exists
-            exists = False
-            try:
-                sftp.stat(remotecase)
-                exists = True
-                if not read_back_and_confirm(sftp, remotecase, checksum):
-                    print("Failed to verify %s! Aborting." % (remotecase,))
-                    sftp.close()
-                    ssh.close()
-                    session.rollback()
-                    sys.exit(1)
-            except FileNotFoundError:
+    for root, dirs, files in os.walk(path):
+        for f in files:
+            if f.endswith(".smt2"):
+                fullPathToCase = os.path.join(root, f)
+                casename = os.path.relpath(fullPathToCase, path)
+                ncases += 1
+                (checksum, status) = process_benchmark(fullPathToCase)
+                case = dbobj.Case(path=casename, checksum=checksum, status=status)
+                benchmark.cases.append(case)
+                (head, tail) = os.path.split(casename)
+                ensure_subdirectories(remotepath, head, sftp)
+                remotecase = remotepath + "/" + casename
+                # see if the file already exists
                 exists = False
-                
-            try:
-                if not exists:
-                    sftp.put(fullPathToCase, remotecase)
+                try:
+                    sftp.stat(remotecase)
+                    exists = True
                     if not read_back_and_confirm(sftp, remotecase, checksum):
                         print("Failed to verify %s! Aborting." % (remotecase,))
                         sftp.close()
                         ssh.close()
                         session.rollback()
                         sys.exit(1)
-            except Exception as e:
-                print("An exception occurred while copying %s:" % (casename,))
-                print(e)
-                sftp.close()
-                ssh.close()
-                session.rollback()
-                sys.exit(1)
-            print(".", end='', flush=True)
-            if ncases % 100 == 0:
-                print("(%d)" % (ncases,))
-sftp.close()
-ssh.close()
-print("")
-            
+                except FileNotFoundError:
+                    exists = False
+
+                try:
+                    if not exists:
+                        sftp.put(fullPathToCase, remotecase)
+                        if not read_back_and_confirm(sftp, remotecase, checksum):
+                            print("Failed to verify %s! Aborting." % (remotecase,))
+                            sftp.close()
+                            ssh.close()
+                            session.rollback()
+                            sys.exit(1)
+                except Exception as e:
+                    print("An exception occurred while copying %s:" % (casename,))
+                    print(e)
+                    sftp.close()
+                    ssh.close()
+                    session.rollback()
+                    sys.exit(1)
+                print(".", end='', flush=True)
+                if ncases % 100 == 0:
+                    print("(%d)" % (ncases,))
+    sftp.close()
+    ssh.close()
+    print("")
+else: # config.remotecopy = False
+    try:
+        os.makedirs(remotepath, exist_ok = True)
+        # iterate over the given path, look for files ending in .smt2
+        ncases = 0
+        for root, dirs, files in os.walk(path):
+            for f in files:
+                if f.endswith(".smt2"):
+                    fullPathToCase = os.path.join(root, f)
+                    casename = os.path.relpath(fullPathToCase, path)
+                    ncases += 1
+                    (checksum, status) = process_benchmark(fullPathToCase)
+                    case = dbobj.Case(path=casename, checksum=checksum, status=status)
+                    benchmark.cases.append(case)
+                    (head, tail) = os.path.split(casename)
+                    os.makedirs(os.path.join(remotepath, head), exist_ok = True)
+                    remotecase = os.path.join(remotepath, casename)
+                    # see if the file already exists
+                    exists = os.path.exists(remotecase)
+                    try:
+                        if not exists:
+                            shutil.copy(fullPathToCase, remotecase)
+                    except Exception as e:
+                        print("An exception occurred while copying %s:" % (casename,))
+                        print(e)
+                        session.rollback()
+                        sys.exit(1)
+                    print(".", end='', flush=True)
+                    if ncases % 100 == 0:
+                        print("(%d)" % (ncases,))
+        print("")
+    except Exception as e:
+        print("Failed to create benchmark:")
+        print(e)
+        session.rollback()
+        sys.exit(1)
+    
 if ncases == 0:
     print("No SMT2 files found in benchmark path. Exiting.")
     print("The database has not been modified.")
