@@ -96,6 +96,7 @@ if config.remotecopy:
 
     try:
         sftp.put(solverpath, remoteBaseDir + "/" + remoteSolverPath)
+        # TODO make remote solver executable
         if not read_back_and_confirm(sftp, remoteBaseDir + "/" + remoteSolverPath, checksum):
             print("Failed to verify solver! Removing file and aborting.")
             try:
@@ -122,6 +123,9 @@ else: # config.remotecopy = False
     try:
         os.makedirs(remoteSolverDir, exist_ok=True)
         shutil.copyfile(solverpath, dst)
+        mode = os.stat(dst).st_mode
+        mode |= (mode & 0o444) >> 2 # copy R bits to X bits
+        os.chmod(dst, mode)
     except Exception as e:
         print("Failed to copy solver:")
         print(e)
