@@ -120,7 +120,8 @@ else: # config.remotecopy = False
     dst = os.path.join(remoteBaseDir, remoteSolverPath)
     print("Copying solver to {}".format(dst))
     try:
-        shutil.copyfile(solver, dst)
+        os.makedirs(remoteSolverDir, exist_ok=True)
+        shutil.copyfile(solverpath, dst)
     except Exception as e:
         print("Failed to copy solver:")
         print(e)
