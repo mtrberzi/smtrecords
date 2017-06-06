@@ -9,7 +9,10 @@ import sys
 import os
 import os.path
 import hashlib
-import paramiko
+
+if config.remotecopy:
+    import paramiko
+
 import dateutil.parser
 import shutil
 

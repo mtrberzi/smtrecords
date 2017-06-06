@@ -9,7 +9,9 @@ import sys
 import os
 import os.path
 import hashlib
-import paramiko
+
+if config.remotecopy:
+    import paramiko
 
 def read_back_and_confirm(sftp, remotePath, checksum):
     try:
@@ -107,8 +109,19 @@ if config.remotecopy:
         sys.exit(1)
     sftp.close()
     ssh.close()
-else:
-    raise Exception("not implemented yet")
+else: # config.remotecopy = False
+    print("Copying solver to {}".format(remoteFilename))
+    try:
+        os.makedirs(config.validationsolverbase, exist_ok=True)
+        shutil.copyfile(solverpath, remoteFilename)
+        mode = os.stat(remoteFilename).st_mode
+        mode |= (mode & 0o444) >> 2
+        os.chmod(remoteFilename, mode)
+    except Exception as e:
+        print("Failed to copy solver:")
+        print(e)
+        session.rollback()
+        sys.exit(1)
 
 session.add(vSolverEntry)
 session.commit()

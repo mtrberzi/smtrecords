@@ -10,7 +10,10 @@ import os
 import os.path
 import hashlib
 import re
-import paramiko
+
+if config.remotecopy:
+    import paramiko
+
 import shutil
 
 re_status = re.compile("set-info\s+:status\s+(\w+)")
