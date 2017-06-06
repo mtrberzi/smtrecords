@@ -104,12 +104,14 @@ def report(session, run):
             print("Errors occurred while validating:")
             for r in errorCases:
                 print(r.case.path)
-            
+
+ignore_completion = False # debug flag. set to true to allow a resumed run to be "restarted". this will overwrite its previous results
+                
 def resume(session, run):
-    if run.complete:
+    if run.complete and not ignore_completion:
         return
     for r in run.results:
-        if r.complete:
+        if r.complete and not ignore_completion:
             pass
         # for now we run every solver locally; TODO celery integration
         # construct full path to instance
@@ -126,8 +128,11 @@ def resume(session, run):
             print("ERROR: solver not found at {}".format(solverpath))
             session.rollback()
             continue
-        
-        args = r.run.command_line.split(" ") # TODO this doesn't properly allow quoted args, etc
+
+        if r.run.command_line.strip() != '':
+            args = r.run.command_line.split(" ") # TODO this doesn't properly allow quoted args, etc
+        else:
+            args = []
         result = tasks.run_smtlib_solver(solverpath, instancepath, 20, args)
         r.complete = True
         r.solver_status = result.result
