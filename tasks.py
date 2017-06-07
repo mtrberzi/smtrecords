@@ -67,6 +67,9 @@ class ResponseVisitor(SmtLib25Visitor):
     def visitIdentifier(self, ctx):
         return ctx.getText()
 
+    def visitBoolean(self, ctx):
+        return ctx.getText()
+
     def visitTerm(self, ctx):
         # handle terms like "( - 1 )"
         if ctx.getChildCount() == 1:

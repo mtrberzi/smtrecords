@@ -6,7 +6,7 @@ from io import StringIO
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3#")
-        buf.write("\u0135\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
+        buf.write("\u0136\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
         buf.write("\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16")
         buf.write("\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\4\23\t\23")
         buf.write("\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31")
@@ -26,25 +26,25 @@ def serializedATN():
         buf.write("\17\16\17\u00c1\13\17\3\17\5\17\u00c4\n\17\3\20\3\20\5")
         buf.write("\20\u00c8\n\20\3\21\3\21\3\21\3\21\3\21\3\21\3\21\5\21")
         buf.write("\u00d1\n\21\3\22\3\22\3\22\3\22\3\22\3\23\3\23\3\23\3")
-        buf.write("\23\3\23\3\24\3\24\3\24\3\24\3\24\6\24\u00e2\n\24\r\24")
-        buf.write("\16\24\u00e3\3\24\3\24\3\24\3\24\3\24\3\24\6\24\u00ec")
-        buf.write("\n\24\r\24\16\24\u00ed\3\24\3\24\3\24\3\24\3\24\3\24\3")
-        buf.write("\24\3\24\6\24\u00f8\n\24\r\24\16\24\u00f9\3\24\3\24\3")
-        buf.write("\24\3\24\3\24\3\24\3\24\3\24\6\24\u0104\n\24\r\24\16\24")
-        buf.write("\u0105\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3\24\6\24\u0110")
-        buf.write("\n\24\r\24\16\24\u0111\3\24\3\24\5\24\u0116\n\24\3\25")
-        buf.write("\3\25\3\25\6\25\u011b\n\25\r\25\16\25\u011c\3\26\3\26")
-        buf.write("\3\26\3\26\3\26\3\27\3\27\3\30\3\30\3\30\7\30\u0129\n")
-        buf.write("\30\f\30\16\30\u012c\13\30\3\30\3\30\3\31\3\31\3\31\3")
+        buf.write("\23\3\23\3\24\3\24\3\24\3\24\3\24\3\24\6\24\u00e3\n\24")
+        buf.write("\r\24\16\24\u00e4\3\24\3\24\3\24\3\24\3\24\3\24\6\24\u00ed")
+        buf.write("\n\24\r\24\16\24\u00ee\3\24\3\24\3\24\3\24\3\24\3\24\3")
+        buf.write("\24\3\24\6\24\u00f9\n\24\r\24\16\24\u00fa\3\24\3\24\3")
+        buf.write("\24\3\24\3\24\3\24\3\24\3\24\6\24\u0105\n\24\r\24\16\24")
+        buf.write("\u0106\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3\24\6\24\u0111")
+        buf.write("\n\24\r\24\16\24\u0112\3\24\3\24\5\24\u0117\n\24\3\25")
+        buf.write("\3\25\3\25\6\25\u011c\n\25\r\25\16\25\u011d\3\26\3\26")
+        buf.write("\3\26\3\26\3\26\3\27\3\27\3\30\3\30\3\30\7\30\u012a\n")
+        buf.write("\30\f\30\16\30\u012d\13\30\3\30\3\30\3\31\3\31\3\31\3")
         buf.write("\31\3\31\3\31\2\2\32\2\4\6\b\n\f\16\20\22\24\26\30\32")
-        buf.write("\34\36 \"$&(*,.\60\2\3\3\2\30\33\u0148\2\64\3\2\2\2\4")
+        buf.write("\34\36 \"$&(*,.\60\2\3\3\2\30\33\u014a\2\64\3\2\2\2\4")
         buf.write("9\3\2\2\2\6@\3\2\2\2\bw\3\2\2\2\ny\3\2\2\2\f\u0085\3\2")
         buf.write("\2\2\16\u0087\3\2\2\2\20\u0089\3\2\2\2\22\u008d\3\2\2")
         buf.write("\2\24\u009a\3\2\2\2\26\u00a7\3\2\2\2\30\u00ab\3\2\2\2")
         buf.write("\32\u00b7\3\2\2\2\34\u00c3\3\2\2\2\36\u00c5\3\2\2\2 \u00d0")
-        buf.write("\3\2\2\2\"\u00d2\3\2\2\2$\u00d7\3\2\2\2&\u0115\3\2\2\2")
-        buf.write("(\u011a\3\2\2\2*\u011e\3\2\2\2,\u0123\3\2\2\2.\u0125\3")
-        buf.write("\2\2\2\60\u012f\3\2\2\2\62\65\5\4\3\2\63\65\5(\25\2\64")
+        buf.write("\3\2\2\2\"\u00d2\3\2\2\2$\u00d7\3\2\2\2&\u0116\3\2\2\2")
+        buf.write("(\u011b\3\2\2\2*\u011f\3\2\2\2,\u0124\3\2\2\2.\u0126\3")
+        buf.write("\2\2\2\60\u0130\3\2\2\2\62\65\5\4\3\2\63\65\5(\25\2\64")
         buf.write("\62\3\2\2\2\64\63\3\2\2\2\65\3\3\2\2\2\668\5\b\5\2\67")
         buf.write("\66\3\2\2\28;\3\2\2\29\67\3\2\2\29:\3\2\2\2:\5\3\2\2\2")
         buf.write(";9\3\2\2\2<=\7\3\2\2=A\5\16\b\2>?\7\4\2\2?A\5\16\b\2@")
@@ -101,47 +101,48 @@ def serializedATN():
         buf.write("\7\5\2\2\u00d3\u00d4\7 \2\2\u00d4\u00d5\5&\24\2\u00d5")
         buf.write("\u00d6\7\7\2\2\u00d6#\3\2\2\2\u00d7\u00d8\7\5\2\2\u00d8")
         buf.write("\u00d9\7 \2\2\u00d9\u00da\5\32\16\2\u00da\u00db\7\7\2")
-        buf.write("\2\u00db%\3\2\2\2\u00dc\u0116\5\22\n\2\u00dd\u0116\5 ")
-        buf.write("\21\2\u00de\u00df\7\5\2\2\u00df\u00e1\5 \21\2\u00e0\u00e2")
-        buf.write("\5&\24\2\u00e1\u00e0\3\2\2\2\u00e2\u00e3\3\2\2\2\u00e3")
-        buf.write("\u00e1\3\2\2\2\u00e3\u00e4\3\2\2\2\u00e4\u00e5\3\2\2\2")
-        buf.write("\u00e5\u00e6\7\7\2\2\u00e6\u0116\3\2\2\2\u00e7\u00e8\7")
-        buf.write("\5\2\2\u00e8\u00e9\7\23\2\2\u00e9\u00eb\7\5\2\2\u00ea")
-        buf.write("\u00ec\5\"\22\2\u00eb\u00ea\3\2\2\2\u00ec\u00ed\3\2\2")
-        buf.write("\2\u00ed\u00eb\3\2\2\2\u00ed\u00ee\3\2\2\2\u00ee\u00ef")
-        buf.write("\3\2\2\2\u00ef\u00f0\7\7\2\2\u00f0\u00f1\5&\24\2\u00f1")
-        buf.write("\u00f2\7\7\2\2\u00f2\u0116\3\2\2\2\u00f3\u00f4\7\5\2\2")
-        buf.write("\u00f4\u00f5\7\24\2\2\u00f5\u00f7\7\5\2\2\u00f6\u00f8")
-        buf.write("\5$\23\2\u00f7\u00f6\3\2\2\2\u00f8\u00f9\3\2\2\2\u00f9")
-        buf.write("\u00f7\3\2\2\2\u00f9\u00fa\3\2\2\2\u00fa\u00fb\3\2\2\2")
-        buf.write("\u00fb\u00fc\7\7\2\2\u00fc\u00fd\5&\24\2\u00fd\u00fe\7")
-        buf.write("\7\2\2\u00fe\u0116\3\2\2\2\u00ff\u0100\7\5\2\2\u0100\u0101")
-        buf.write("\7\25\2\2\u0101\u0103\7\5\2\2\u0102\u0104\5$\23\2\u0103")
-        buf.write("\u0102\3\2\2\2\u0104\u0105\3\2\2\2\u0105\u0103\3\2\2\2")
-        buf.write("\u0105\u0106\3\2\2\2\u0106\u0107\3\2\2\2\u0107\u0108\7")
-        buf.write("\7\2\2\u0108\u0109\5&\24\2\u0109\u010a\7\7\2\2\u010a\u0116")
-        buf.write("\3\2\2\2\u010b\u010c\7\5\2\2\u010c\u010d\7\26\2\2\u010d")
-        buf.write("\u010f\5&\24\2\u010e\u0110\5\36\20\2\u010f\u010e\3\2\2")
-        buf.write("\2\u0110\u0111\3\2\2\2\u0111\u010f\3\2\2\2\u0111\u0112")
-        buf.write("\3\2\2\2\u0112\u0113\3\2\2\2\u0113\u0114\7\7\2\2\u0114")
-        buf.write("\u0116\3\2\2\2\u0115\u00dc\3\2\2\2\u0115\u00dd\3\2\2\2")
-        buf.write("\u0115\u00de\3\2\2\2\u0115\u00e7\3\2\2\2\u0115\u00f3\3")
-        buf.write("\2\2\2\u0115\u00ff\3\2\2\2\u0115\u010b\3\2\2\2\u0116\'")
-        buf.write("\3\2\2\2\u0117\u011b\5*\26\2\u0118\u011b\5,\27\2\u0119")
-        buf.write("\u011b\5.\30\2\u011a\u0117\3\2\2\2\u011a\u0118\3\2\2\2")
-        buf.write("\u011a\u0119\3\2\2\2\u011b\u011c\3\2\2\2\u011c\u011a\3")
-        buf.write("\2\2\2\u011c\u011d\3\2\2\2\u011d)\3\2\2\2\u011e\u011f")
-        buf.write("\7\5\2\2\u011f\u0120\7\27\2\2\u0120\u0121\5\20\t\2\u0121")
-        buf.write("\u0122\7\7\2\2\u0122+\3\2\2\2\u0123\u0124\t\2\2\2\u0124")
-        buf.write("-\3\2\2\2\u0125\u0126\7\5\2\2\u0126\u012a\7\34\2\2\u0127")
-        buf.write("\u0129\5\60\31\2\u0128\u0127\3\2\2\2\u0129\u012c\3\2\2")
-        buf.write("\2\u012a\u0128\3\2\2\2\u012a\u012b\3\2\2\2\u012b\u012d")
-        buf.write("\3\2\2\2\u012c\u012a\3\2\2\2\u012d\u012e\7\7\2\2\u012e")
-        buf.write("/\3\2\2\2\u012f\u0130\7\5\2\2\u0130\u0131\7\13\2\2\u0131")
-        buf.write("\u0132\5\n\6\2\u0132\u0133\7\7\2\2\u0133\61\3\2\2\2\35")
-        buf.write("\649@Ww~\u008d\u0096\u009a\u00a3\u00a7\u00ab\u00b3\u00b7")
-        buf.write("\u00bf\u00c3\u00c7\u00d0\u00e3\u00ed\u00f9\u0105\u0111")
-        buf.write("\u0115\u011a\u011c\u012a")
+        buf.write("\2\u00db%\3\2\2\2\u00dc\u0117\5\22\n\2\u00dd\u0117\5\16")
+        buf.write("\b\2\u00de\u0117\5 \21\2\u00df\u00e0\7\5\2\2\u00e0\u00e2")
+        buf.write("\5 \21\2\u00e1\u00e3\5&\24\2\u00e2\u00e1\3\2\2\2\u00e3")
+        buf.write("\u00e4\3\2\2\2\u00e4\u00e2\3\2\2\2\u00e4\u00e5\3\2\2\2")
+        buf.write("\u00e5\u00e6\3\2\2\2\u00e6\u00e7\7\7\2\2\u00e7\u0117\3")
+        buf.write("\2\2\2\u00e8\u00e9\7\5\2\2\u00e9\u00ea\7\23\2\2\u00ea")
+        buf.write("\u00ec\7\5\2\2\u00eb\u00ed\5\"\22\2\u00ec\u00eb\3\2\2")
+        buf.write("\2\u00ed\u00ee\3\2\2\2\u00ee\u00ec\3\2\2\2\u00ee\u00ef")
+        buf.write("\3\2\2\2\u00ef\u00f0\3\2\2\2\u00f0\u00f1\7\7\2\2\u00f1")
+        buf.write("\u00f2\5&\24\2\u00f2\u00f3\7\7\2\2\u00f3\u0117\3\2\2\2")
+        buf.write("\u00f4\u00f5\7\5\2\2\u00f5\u00f6\7\24\2\2\u00f6\u00f8")
+        buf.write("\7\5\2\2\u00f7\u00f9\5$\23\2\u00f8\u00f7\3\2\2\2\u00f9")
+        buf.write("\u00fa\3\2\2\2\u00fa\u00f8\3\2\2\2\u00fa\u00fb\3\2\2\2")
+        buf.write("\u00fb\u00fc\3\2\2\2\u00fc\u00fd\7\7\2\2\u00fd\u00fe\5")
+        buf.write("&\24\2\u00fe\u00ff\7\7\2\2\u00ff\u0117\3\2\2\2\u0100\u0101")
+        buf.write("\7\5\2\2\u0101\u0102\7\25\2\2\u0102\u0104\7\5\2\2\u0103")
+        buf.write("\u0105\5$\23\2\u0104\u0103\3\2\2\2\u0105\u0106\3\2\2\2")
+        buf.write("\u0106\u0104\3\2\2\2\u0106\u0107\3\2\2\2\u0107\u0108\3")
+        buf.write("\2\2\2\u0108\u0109\7\7\2\2\u0109\u010a\5&\24\2\u010a\u010b")
+        buf.write("\7\7\2\2\u010b\u0117\3\2\2\2\u010c\u010d\7\5\2\2\u010d")
+        buf.write("\u010e\7\26\2\2\u010e\u0110\5&\24\2\u010f\u0111\5\36\20")
+        buf.write("\2\u0110\u010f\3\2\2\2\u0111\u0112\3\2\2\2\u0112\u0110")
+        buf.write("\3\2\2\2\u0112\u0113\3\2\2\2\u0113\u0114\3\2\2\2\u0114")
+        buf.write("\u0115\7\7\2\2\u0115\u0117\3\2\2\2\u0116\u00dc\3\2\2\2")
+        buf.write("\u0116\u00dd\3\2\2\2\u0116\u00de\3\2\2\2\u0116\u00df\3")
+        buf.write("\2\2\2\u0116\u00e8\3\2\2\2\u0116\u00f4\3\2\2\2\u0116\u0100")
+        buf.write("\3\2\2\2\u0116\u010c\3\2\2\2\u0117\'\3\2\2\2\u0118\u011c")
+        buf.write("\5*\26\2\u0119\u011c\5,\27\2\u011a\u011c\5.\30\2\u011b")
+        buf.write("\u0118\3\2\2\2\u011b\u0119\3\2\2\2\u011b\u011a\3\2\2\2")
+        buf.write("\u011c\u011d\3\2\2\2\u011d\u011b\3\2\2\2\u011d\u011e\3")
+        buf.write("\2\2\2\u011e)\3\2\2\2\u011f\u0120\7\5\2\2\u0120\u0121")
+        buf.write("\7\27\2\2\u0121\u0122\5\20\t\2\u0122\u0123\7\7\2\2\u0123")
+        buf.write("+\3\2\2\2\u0124\u0125\t\2\2\2\u0125-\3\2\2\2\u0126\u0127")
+        buf.write("\7\5\2\2\u0127\u012b\7\34\2\2\u0128\u012a\5\60\31\2\u0129")
+        buf.write("\u0128\3\2\2\2\u012a\u012d\3\2\2\2\u012b\u0129\3\2\2\2")
+        buf.write("\u012b\u012c\3\2\2\2\u012c\u012e\3\2\2\2\u012d\u012b\3")
+        buf.write("\2\2\2\u012e\u012f\7\7\2\2\u012f/\3\2\2\2\u0130\u0131")
+        buf.write("\7\5\2\2\u0131\u0132\7\13\2\2\u0132\u0133\5\n\6\2\u0133")
+        buf.write("\u0134\7\7\2\2\u0134\61\3\2\2\2\35\649@Ww~\u008d\u0096")
+        buf.write("\u009a\u00a3\u00a7\u00ab\u00b3\u00b7\u00bf\u00c3\u00c7")
+        buf.write("\u00d0\u00e4\u00ee\u00fa\u0106\u0112\u0116\u011b\u011d")
+        buf.write("\u012b")
         return buf.getvalue()
 
 
@@ -1560,6 +1561,10 @@ class SmtLib25Parser ( Parser ):
             return self.getTypedRuleContext(SmtLib25Parser.Spec_constantContext,0)
 
 
+        def boolean(self):
+            return self.getTypedRuleContext(SmtLib25Parser.BooleanContext,0)
+
+
         def qual_identifier(self):
             return self.getTypedRuleContext(SmtLib25Parser.Qual_identifierContext,0)
 
@@ -1618,7 +1623,7 @@ class SmtLib25Parser ( Parser ):
         self.enterRule(localctx, 36, self.RULE_term)
         self._la = 0 # Token type
         try:
-            self.state = 275
+            self.state = 276
             la_ = self._interp.adaptivePredict(self._input,23,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
@@ -1629,136 +1634,142 @@ class SmtLib25Parser ( Parser ):
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 219
-                self.qual_identifier()
+                self.boolean()
                 pass
 
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
                 self.state = 220
-                self.match(SmtLib25Parser.T__2)
-                self.state = 221
                 self.qual_identifier()
-                self.state = 223 
-                self._errHandler.sync(self)
-                _la = self._input.LA(1)
-                while True:
-                    self.state = 222
-                    self.term()
-                    self.state = 225 
-                    self._errHandler.sync(self)
-                    _la = self._input.LA(1)
-                    if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << SmtLib25Parser.T__2) | (1 << SmtLib25Parser.INTEGER) | (1 << SmtLib25Parser.STRINGCONSTANT) | (1 << SmtLib25Parser.SYMBOL))) != 0)):
-                        break
-
-                self.state = 227
-                self.match(SmtLib25Parser.T__4)
                 pass
 
             elif la_ == 4:
                 self.enterOuterAlt(localctx, 4)
-                self.state = 229
+                self.state = 221
                 self.match(SmtLib25Parser.T__2)
-                self.state = 230
-                self.match(SmtLib25Parser.T__16)
-                self.state = 231
-                self.match(SmtLib25Parser.T__2)
-                self.state = 233 
+                self.state = 222
+                self.qual_identifier()
+                self.state = 224 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while True:
-                    self.state = 232
-                    self.var_binding()
-                    self.state = 235 
+                    self.state = 223
+                    self.term()
+                    self.state = 226 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
-                    if not (_la==SmtLib25Parser.T__2):
+                    if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << SmtLib25Parser.T__2) | (1 << SmtLib25Parser.INTEGER) | (1 << SmtLib25Parser.B_VALUE) | (1 << SmtLib25Parser.STRINGCONSTANT) | (1 << SmtLib25Parser.SYMBOL))) != 0)):
                         break
 
-                self.state = 237
-                self.match(SmtLib25Parser.T__4)
-                self.state = 238
-                self.term()
-                self.state = 239
+                self.state = 228
                 self.match(SmtLib25Parser.T__4)
                 pass
 
             elif la_ == 5:
                 self.enterOuterAlt(localctx, 5)
-                self.state = 241
+                self.state = 230
                 self.match(SmtLib25Parser.T__2)
-                self.state = 242
-                self.match(SmtLib25Parser.T__17)
-                self.state = 243
+                self.state = 231
+                self.match(SmtLib25Parser.T__16)
+                self.state = 232
                 self.match(SmtLib25Parser.T__2)
-                self.state = 245 
+                self.state = 234 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while True:
-                    self.state = 244
-                    self.sorted_var()
-                    self.state = 247 
+                    self.state = 233
+                    self.var_binding()
+                    self.state = 236 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
                     if not (_la==SmtLib25Parser.T__2):
                         break
 
-                self.state = 249
+                self.state = 238
                 self.match(SmtLib25Parser.T__4)
-                self.state = 250
+                self.state = 239
                 self.term()
-                self.state = 251
+                self.state = 240
                 self.match(SmtLib25Parser.T__4)
                 pass
 
             elif la_ == 6:
                 self.enterOuterAlt(localctx, 6)
-                self.state = 253
+                self.state = 242
                 self.match(SmtLib25Parser.T__2)
-                self.state = 254
-                self.match(SmtLib25Parser.T__18)
-                self.state = 255
+                self.state = 243
+                self.match(SmtLib25Parser.T__17)
+                self.state = 244
                 self.match(SmtLib25Parser.T__2)
-                self.state = 257 
+                self.state = 246 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while True:
-                    self.state = 256
+                    self.state = 245
                     self.sorted_var()
-                    self.state = 259 
+                    self.state = 248 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
                     if not (_la==SmtLib25Parser.T__2):
                         break
 
-                self.state = 261
+                self.state = 250
                 self.match(SmtLib25Parser.T__4)
-                self.state = 262
+                self.state = 251
                 self.term()
-                self.state = 263
+                self.state = 252
                 self.match(SmtLib25Parser.T__4)
                 pass
 
             elif la_ == 7:
                 self.enterOuterAlt(localctx, 7)
-                self.state = 265
+                self.state = 254
                 self.match(SmtLib25Parser.T__2)
-                self.state = 266
-                self.match(SmtLib25Parser.T__19)
-                self.state = 267
-                self.term()
-                self.state = 269 
+                self.state = 255
+                self.match(SmtLib25Parser.T__18)
+                self.state = 256
+                self.match(SmtLib25Parser.T__2)
+                self.state = 258 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while True:
-                    self.state = 268
+                    self.state = 257
+                    self.sorted_var()
+                    self.state = 260 
+                    self._errHandler.sync(self)
+                    _la = self._input.LA(1)
+                    if not (_la==SmtLib25Parser.T__2):
+                        break
+
+                self.state = 262
+                self.match(SmtLib25Parser.T__4)
+                self.state = 263
+                self.term()
+                self.state = 264
+                self.match(SmtLib25Parser.T__4)
+                pass
+
+            elif la_ == 8:
+                self.enterOuterAlt(localctx, 8)
+                self.state = 266
+                self.match(SmtLib25Parser.T__2)
+                self.state = 267
+                self.match(SmtLib25Parser.T__19)
+                self.state = 268
+                self.term()
+                self.state = 270 
+                self._errHandler.sync(self)
+                _la = self._input.LA(1)
+                while True:
+                    self.state = 269
                     self.attribute()
-                    self.state = 271 
+                    self.state = 272 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
                     if not (_la==SmtLib25Parser.KEYWORD):
                         break
 
-                self.state = 273
+                self.state = 274
                 self.match(SmtLib25Parser.T__4)
                 pass
 
@@ -1825,29 +1836,29 @@ class SmtLib25Parser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 280 
+            self.state = 281 
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while True:
-                self.state = 280
+                self.state = 281
                 la_ = self._interp.adaptivePredict(self._input,24,self._ctx)
                 if la_ == 1:
-                    self.state = 277
+                    self.state = 278
                     self.error_response()
                     pass
 
                 elif la_ == 2:
-                    self.state = 278
+                    self.state = 279
                     self.check_sat_response()
                     pass
 
                 elif la_ == 3:
-                    self.state = 279
+                    self.state = 280
                     self.get_model_response()
                     pass
 
 
-                self.state = 282 
+                self.state = 283 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << SmtLib25Parser.T__2) | (1 << SmtLib25Parser.T__21) | (1 << SmtLib25Parser.T__22) | (1 << SmtLib25Parser.T__23) | (1 << SmtLib25Parser.T__24))) != 0)):
@@ -1897,13 +1908,13 @@ class SmtLib25Parser ( Parser ):
         self.enterRule(localctx, 40, self.RULE_error_response)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 284
-            self.match(SmtLib25Parser.T__2)
             self.state = 285
-            self.match(SmtLib25Parser.T__20)
+            self.match(SmtLib25Parser.T__2)
             self.state = 286
-            self.string()
+            self.match(SmtLib25Parser.T__20)
             self.state = 287
+            self.string()
+            self.state = 288
             self.match(SmtLib25Parser.T__4)
         except RecognitionException as re:
             localctx.exception = re
@@ -1947,7 +1958,7 @@ class SmtLib25Parser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 289
+            self.state = 290
             _la = self._input.LA(1)
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << SmtLib25Parser.T__21) | (1 << SmtLib25Parser.T__22) | (1 << SmtLib25Parser.T__23) | (1 << SmtLib25Parser.T__24))) != 0)):
                 self._errHandler.recoverInline(self)
@@ -2001,21 +2012,21 @@ class SmtLib25Parser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 291
-            self.match(SmtLib25Parser.T__2)
             self.state = 292
+            self.match(SmtLib25Parser.T__2)
+            self.state = 293
             self.match(SmtLib25Parser.T__25)
-            self.state = 296
+            self.state = 297
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==SmtLib25Parser.T__2:
-                self.state = 293
+                self.state = 294
                 self.model_response()
-                self.state = 298
+                self.state = 299
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
-            self.state = 299
+            self.state = 300
             self.match(SmtLib25Parser.T__4)
         except RecognitionException as re:
             localctx.exception = re
@@ -2061,13 +2072,13 @@ class SmtLib25Parser ( Parser ):
         self.enterRule(localctx, 46, self.RULE_model_response)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 301
-            self.match(SmtLib25Parser.T__2)
             self.state = 302
-            self.match(SmtLib25Parser.T__8)
+            self.match(SmtLib25Parser.T__2)
             self.state = 303
-            self.fun_def()
+            self.match(SmtLib25Parser.T__8)
             self.state = 304
+            self.fun_def()
+            self.state = 305
             self.match(SmtLib25Parser.T__4)
         except RecognitionException as re:
             localctx.exception = re

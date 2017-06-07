@@ -77,6 +77,7 @@ var_binding : '(' SYMBOL term ')' ;
 sorted_var : '(' SYMBOL sort ')' ;
 
 term : spec_constant
+    | boolean
     | qual_identifier
     | '(' qual_identifier term+ ')'
     | '(' 'let' '(' var_binding+ ')' term ')'
