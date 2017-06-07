@@ -59,6 +59,16 @@ def report(session, run):
         timeF = float(totalTime) / 1000.0
         timeNoTimeoutF = float(totalTimeWithoutTimeouts) / 1000.0
         print("Total time: (without timeouts) {:.3f} (with timeouts) {:.3f}".format(timeNoTimeoutF, timeF))
+        if nTIMEOUT > 0:
+            print("Timeouts:")
+            for r in run.results:
+                if r.solver_status == 'timeout':
+                    print(r.case.path)
+        if nERROR > 0:
+            print("Errors:")
+            for r in run.results:
+                if r.solver_status == 'error':
+                    print(r.case.path)
 
         nValidations = 0
         nValidationSuccesses = 0
