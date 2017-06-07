@@ -96,4 +96,6 @@ get_model_response : '(' 'model' model_response* ')' ;
 
 model_response : '(' 'define-fun' fun_def ')' ;
 
+Comment : ';' ~( '\r' | '\n')* -> skip;
+
 WS: [ \n\t\r]+ -> skip;

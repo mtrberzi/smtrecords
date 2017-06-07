@@ -5,7 +5,7 @@ from io import StringIO
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write("\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\"")
+        buf.write("\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3#")
         buf.write("\u0135\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
         buf.write("\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16")
         buf.write("\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\4\23\t\23")
@@ -171,7 +171,7 @@ class SmtLib25Parser ( Parser ):
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "INTEGER", 
                       "B_VALUE", "STRINGCONSTANT", "SYMBOL", "KEYWORD", 
-                      "WS" ]
+                      "Comment", "WS" ]
 
     RULE_smtfile = 0
     RULE_script = 1
@@ -237,7 +237,8 @@ class SmtLib25Parser ( Parser ):
     STRINGCONSTANT=29
     SYMBOL=30
     KEYWORD=31
-    WS=32
+    Comment=32
+    WS=33
 
     def __init__(self, input:TokenStream):
         super().__init__(input)
