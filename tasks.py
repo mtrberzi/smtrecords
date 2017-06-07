@@ -310,7 +310,7 @@ def validate_result(solverCommandLine, casePath, expectedResult, testOutput):
     def alarm_handler(signum, frame):
         raise Alarm
     # read the case and parse it
-    case_stream = FileStream(casePath)
+    case_stream = FileStream(casePath, encoding='utf-8')
     case_lexer = SmtLib25Lexer(case_stream)
     case_token_stream = CommonTokenStream(case_lexer)
     case_parser = SmtLib25Parser(case_token_stream)
