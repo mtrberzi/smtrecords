@@ -30,8 +30,17 @@ runs = None
 if len(sys.argv) == 2: # benchmark only
     benchmarkName = sys.argv[1]
     runs = session.query(dbobj.Run).join(dbobj.Benchmark).filter(dbobj.Benchmark.name == benchmarkName).order_by(dbobj.Run.startdate).all()
+elif len(sys.argv) == 3: # benchmark and solver name
+    benchmarkName = sys.argv[1]
+    solverName = sys.argv[2]
+    runs = session.query(dbobj.Run).join(dbobj.Benchmark).filter(dbobj.Benchmark.name == benchmarkName).join(dbobj.SolverVersion, dbobj.Solver).filter(dbobj.Solver.name == solverName).order_by(dbobj.Run.startdate).all()
+elif len(sys.argv) == 4: # benchmark, solver name, version
+    benchmarkName = sys.argv[1]
+    solverName = sys.argv[2]
+    solverVersion = sys.argv[3]
+    runs = session.query(dbobj.Run).join(dbobj.Benchmark).filter(dbobj.Benchmark.name == benchmarkName).join(dbobj.SolverVersion, dbobj.Solver).filter(dbobj.Solver.name == solverName).filter(dbobj.SolverVersion.version == solverVersion).order_by(dbobj.Run.startdate).all()
 else:
-    print("NOT IMPLEMENTED YET!")
+    usage()
     sys.exit(1)
 
 if runs is None:
