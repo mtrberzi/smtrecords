@@ -50,7 +50,16 @@ if runs is None:
 print("{} runs found:".format(len(runs)))
 for run in runs:
     if not run.complete:
-        print("#{} {}-{} {} Incomplete".format(run.id, run.solver_version.solver.name, run.solver_version.version, run.startdate))
+        nTotalCases = 0
+        nSolvedCases = 0
+        totalTime = 0 # milliseconds, integer
+        for r in run.results:
+            nTotalCases += 1
+            if r.complete:
+                nSolvedCases += 1
+                totalTime += r.completion_time
+        timeF = float(totalTime) / 1000.0
+        print("#{} {}-{} {} Incomplete ({}/{} done, {:.3f}s)".format(run.id, run.solver_version.solver.name, run.solver_version.version, run.startdate, nSolvedCases, nTotalCases, timeF))
     else:
         nSAT = 0
         nUNSAT = 0
