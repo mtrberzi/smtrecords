@@ -49,6 +49,7 @@ def data2png(raw_data, title):
     import matplotlib
     matplotlib.use('svg')
     import matplotlib.pyplot as pyplot
+    import matplotlib.ticker
 
     # set axis labels and graph title
     pyplot.title(title + '\n', fontsize=TITLE_FONTSIZE)
@@ -83,12 +84,15 @@ def data2png(raw_data, title):
     for points in groomed_data:
         x = range(len(points))
         y = [point['elapsed'] for point in points]
-        pyplot.plot(x, y, color=colours[0], linestyle='solid', marker='x', label=get_solver_name(points))
+        pyplot.plot(x, y, color=colours[0], linestyle='solid', marker='.', label=get_solver_name(points))
         colours = colours[1:] # pop last used colour
 
     # put the legend somewhere sensible
     ax = pyplot.gca()
     box = ax.get_position()
+    ax.set_yscale("log", nonposy='clip')
+    ax.set_ylim(ymin=0.001, ymax=max_y*1.1)
+
 #    ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
     lgd = pyplot.legend(loc='center left', bbox_to_anchor=(0, -0.2));
 
