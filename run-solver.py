@@ -56,7 +56,7 @@ try:
     # unpack (Solver, SolverVersion)
     solver = solver[1]
     if runAllBenchmarks:
-        
+        pass
     else:
         benchmark = session.query(dbobj.Benchmark).filter(dbobj.Benchmark.name == benchmarkName).one_or_none()
         if benchmark is None:
