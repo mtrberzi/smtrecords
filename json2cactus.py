@@ -90,7 +90,7 @@ def data2png(raw_data, title):
     # put the legend somewhere sensible
     ax = pyplot.gca()
     box = ax.get_position()
-    ax.set_yscale("log", nonposy='clip')
+#    ax.set_yscale("log", nonposy='clip')
     ax.set_ylim(ymin=0.001, ymax=max_y*1.1)
 
 #    ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
