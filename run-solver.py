@@ -86,7 +86,7 @@ if runAllBenchmarks:
         session.commit()
         print("Scheduled run of {} for {}-{} (ID {}).".format(benchmarkName, solverName, solverVersionName, solverRun.id))
     for run in runs:
-        runmanagement.resume(session, solverRun)
+        runmanagement.resume(session, run)
 else:
     # create Run object
     solverRun = dbobj.Run(benchmark=benchmark, solver_version=solver, command_line=" ".join(solverArguments), complete=False)
