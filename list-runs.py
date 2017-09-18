@@ -59,7 +59,7 @@ for run in runs:
                 nSolvedCases += 1
                 totalTime += r.completion_time
         timeF = float(totalTime) / 1000.0
-        print("#{} {}-{} {} Incomplete ({}/{} done, {:.3f}s)".format(run.id, run.solver_version.solver.name, run.solver_version.version, run.startdate, nSolvedCases, nTotalCases, timeF))
+        print("#{} {}-{} {} Incomplete ({}/{} done, {:.3f}s) {}".format(run.id, run.solver_version.solver.name, run.solver_version.version, run.startdate, nSolvedCases, nTotalCases, timeF, run.command_line))
     else:
         nSAT = 0
         nUNSAT = 0
@@ -87,5 +87,5 @@ for run in runs:
         timeF = float(totalTime) / 1000.0
         timeNoTimeoutF = float(totalTimeWithoutTimeouts) / 1000.0
         timeDisplay = "({:.3f}s | {:.3f}s+T/O)".format(timeNoTimeoutF, timeF)
-        print("#{} {}-{} {} {} {}".format(run.id, run.solver_version.solver.name, run.solver_version.version, run.startdate, timeDisplay, caseDisplay))
+        print("#{} {}-{} {} {} {} {}".format(run.id, run.solver_version.solver.name, run.solver_version.version, run.startdate, timeDisplay, caseDisplay, run.command_line))
 
