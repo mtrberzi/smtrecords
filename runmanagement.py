@@ -64,6 +64,11 @@ def report(session, run):
             for r in run.results:
                 if r.solver_status == 'timeout':
                     print(r.case.path)
+        if nUNKNOWN > 0:
+            print("Unknowns:")
+            for r in run.results:
+                if r.solver_status == 'unknown':
+                    print(r.case.path)
         if nERROR > 0:
             print("Errors:")
             for r in run.results:
