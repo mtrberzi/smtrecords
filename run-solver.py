@@ -77,14 +77,14 @@ if runAllBenchmarks:
         sys.exit(1)
     runs = []
     for benchmark in allBenchmarks:
-            # create Run object
+        # create Run object
         solverRun = dbobj.Run(benchmark=benchmark, solver_version=solver, command_line=" ".join(solverArguments), complete=False)
         runs.append(solverRun)
         # create a Result object for each case
         for benchmarkCase in benchmark.cases:
             result = dbobj.RunResult(run = solverRun, case = benchmarkCase, complete=False, solver_status=None, solver_output=None, solver_stderr=None, completion_time=None, hostname=None)
         session.commit()
-        print("Scheduled run of {} for {}-{} (ID {}).".format(benchmarkName, solverName, solverVersionName, solverRun.id))
+        print("Scheduled run of {} for {}-{} (ID {}).".format(benchmark.name, solverName, solverVersionName, solverRun.id))
     for run in runs:
         runmanagement.resume(session, run)
 else:
