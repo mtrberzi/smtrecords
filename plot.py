@@ -61,7 +61,7 @@ for sID in sys.argv[2:]:
 formattedResults = {}
 
 for run in runs:
-    solver = "{}-{}".format(run.solver_version.solver.name, run.solver_version.version)
+    solver = "#{} {}-{}".format(run.id, run.solver_version.solver.name, run.solver_version.version)
     formattedResults[solver] = []
     for result in run.results:
         resultObj = {}
