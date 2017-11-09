@@ -49,7 +49,7 @@ if runs is None:
     
 print("{} runs found:".format(len(runs)))
 for run in runs:
-    if not run.complete:
+    if False:
         nTotalCases = 0
         nSolvedCases = 0
         totalTime = 0 # milliseconds, integer
@@ -66,9 +66,13 @@ for run in runs:
         nTIMEOUT = 0
         nUNKNOWN = 0
         nERROR = 0
+        nINC = 0
         totalTime = 0 # milliseconds, integer
         totalTimeWithoutTimeouts = 0 # milliseconds, integer
         for r in run.results:
+            if r.complete == False:
+                nINC += 1
+                continue
             if r.solver_status == 'sat':
                 nSAT += 1
             elif r.solver_status == 'unsat':
@@ -84,6 +88,8 @@ for run in runs:
             if r.solver_status != 'timeout':
                 totalTimeWithoutTimeouts += r.completion_time
         caseDisplay = "<SAT:{} UNSAT:{} T/O:{} UNK:{} ERR:{}>".format(nSAT, nUNSAT, nTIMEOUT, nUNKNOWN, nERROR)
+        if not run.complete:
+            caseDisplay += " <Incomplete: {}>".format(nINC)
         timeF = float(totalTime) / 1000.0
         timeNoTimeoutF = float(totalTimeWithoutTimeouts) / 1000.0
         timeDisplay = "({:.3f}s | {:.3f}s+T/O)".format(timeNoTimeoutF, timeF)
