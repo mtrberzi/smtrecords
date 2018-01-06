@@ -57,7 +57,7 @@ existingVersion = session.query(dbobj.Solver, dbobj.SolverVersion).filter(dbobj.
 if existingVersion is not None:
     print("Solver %s-%s already exists." % (solvername, version))
     session.rollback()
-    sys.exit(0)
+    sys.exit(1)
 
 checksum = ""
 try:

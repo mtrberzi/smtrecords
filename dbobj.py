@@ -9,7 +9,7 @@ import config
 
 def mk_engine():
     connection_string = "%s://%s:%s@%s/%s" % (config.dbtype, config.username, config.password, config.dbhost, config.dbname)
-    engine = create_engine(connection_string)
+    engine = create_engine(connection_string, convert_unicode=True)
     return engine
 
 ### ORM definitions
