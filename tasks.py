@@ -27,13 +27,13 @@ class ResponseVisitor(SmtLib25Visitor):
         if self.status is not None:
             raise ValueError("multiple check-sat-response entries not supported")
         response = ctx.getText()
-        if response == "sat\n":
+        if response == "sat":
             self.status = "sat"
-        elif response == "unsat\n":
+        elif response == "unsat":
             self.status = "unsat"
-        elif response == "timeout\n":
+        elif response == "timeout":
             self.status = "timeout"
-        elif response == "unknown\n":
+        elif response == "unknown":
             self.status = "unknown"
         else:
             raise ValueError("unrecognized check-sat-response " + response)
@@ -164,8 +164,8 @@ def run(args, cwd = None, shell = False, kill_tree = True, timeout = -1, env = N
         signal.alarm(timeout)
     try:
         stdout, stderr = p.communicate()
-        stdout = stdout.decode(encoding='ascii')
-        stderr = stderr.decode(encoding='ascii')
+        stdout = stdout.decode(encoding='latin-1')
+        stderr = stderr.decode(encoding='latin-1')
         if timeout != -1:
             signal.alarm(0)
     except Alarm:

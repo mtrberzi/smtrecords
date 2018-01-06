@@ -161,8 +161,7 @@ class SmtLib25Parser ( Parser ):
                      "'declare-fun'", "'define-fun'", "'exit'", "'get-model'", 
                      "'set-logic'", "'set-info'", "'set-option'", "'_'", 
                      "'as'", "'let'", "'forall'", "'exists'", "'!'", "'error'", 
-                     "'sat\n'", "'unsat\n'", "'timeout\n'", "'unknown\n'", 
-                     "'model'" ]
+                     "'sat'", "'unsat'", "'timeout'", "'unknown'", "'model'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 

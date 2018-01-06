@@ -34,7 +34,7 @@ B_VALUE : 'true' | 'false' ;
 numeral : INTEGER;
 boolean : B_VALUE;
 
-STRINGCONSTANT : '"' (QUOTEESCAPE|.)*? '"' ;
+STRINGCONSTANT : '"' (QUOTEESCAPE|~('"'))* '"' ;
 fragment QUOTEESCAPE : '""' ;
 
 string : STRINGCONSTANT;
@@ -91,7 +91,7 @@ term : spec_constant
 response : (error_response | check_sat_response | get_model_response)+;
 
 error_response : '(' 'error' string ')' ;
-check_sat_response : 'sat\n' | 'unsat\n' | 'timeout\n' | 'unknown\n';
+check_sat_response : 'sat' | 'unsat' | 'timeout' | 'unknown';
 /* The following is specific to Z3 and is not SMT-LIB 2.5 standard. */
 get_model_response : '(' 'model' model_response* ')' ;
 
