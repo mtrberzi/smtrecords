@@ -5,7 +5,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Boolean, T
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
-import config
+from . import config
 
 def mk_engine():
     connection_string = "%s://%s:%s@%s/%s" % (config.dbtype, config.username, config.password, config.dbhost, config.dbname)
