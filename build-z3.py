@@ -4,6 +4,8 @@
 # Basic usage: build-z3.py [options] [branch-name]
 # branch-name defaults to "develop" if not provided.
 
+from smtrecords import config, celeryapp
+import smtrecords.worker_tasks
 import git
 import optparse
 import tempfile
@@ -35,49 +37,66 @@ elif len(args) == 1:
     branch = args[0]
 else:
     parser.error("incorrect number of arguments")
-    
-with tempfile.TemporaryDirectory() as tmpdirname:
-    if options.verbose:
-        print("Cloning {} to {}".format(options.remote, tmpdirname))
-    # clone remote repo to tmpdir
-    repo = git.Repo.clone_from(options.remote, tmpdirname)
-    if repo is None:
-        eprint("Failed to clone repository")
-        sys.exit(1)
-    if not branch in repo.remotes['origin'].refs:
-        eprint("Branch {} does not exist in repository".format(branch))
-        sys.exit(1)
-    # checkout the branch we want to build
-    ref = repo.remotes['origin'].refs[branch]
-    repo.create_head(branch, ref)
-    repo.heads[branch].set_tracking_branch(ref)
-    repo.heads[branch].checkout()
-    version = repo.head.commit.hexsha
-    solverVersion = branch + "-" + version
-    stdout_target = None
-    if not options.verbose:
-        stdout_target = subprocess.DEVNULL
-    # run config script and make
-    try:
-        subprocess.check_call(["python", "scripts/mk_make.py"], stdout=stdout_target, cwd=tmpdirname)
-        subprocess.check_call(["make", "-j", options.jobs], stdout=stdout_target, cwd=os.path.join(tmpdirname, "build"))
-    except subprocess.CalledProcessError as e:
-        eprint("Failed to compile Z3.")
-        sys.exit(1)
-    # now we should have a Z3 binary at tmpdirname/build/z3
-    # so, we should be able to call new-solver.py to register it
-    try:
-        subprocess.check_call(["./new-solver.py", options.solverName, solverVersion, os.path.join(tmpdirname, "build", "z3")], stdout=stdout_target, cwd=scriptbase)
-    except subprocess.CalledProcessError as e:
-        eprint("Failed to register solver.")
-        sys.exit(1)
-    if options.build_only:
-        sys.exit(0)
-# tmpdir is now deleted.
 
-# now run tests
-try:
-    subprocess.check_call(["./run-solver.py", options.solverName, solverVersion, "all", options.testargs], stdout=stdout_target, cwd=scriptbase)
-except subprocess.CalledProcessError as e:
-    eprint("An error occurred while running tests.")
-    sys.exit(1)
+if config.usecluster:
+    if options.verbose:
+        print("Launching build task to build {} from {} branch of {}.".format(options.solverName, branch, options.remote))
+    buildTaskResult = smtrecords.worker_tasks.build_z3.delay(solver_name=options.solverName, remote=options.remote, branch=branch)
+    try:
+        buildTaskResult.wait()
+        if buildTaskResult.successful():
+            if options.verbose:
+                print("The build was completed successfully.")
+        else:
+            eprint("Build failed.")
+            sys.exit(1)
+    except Exception as e:
+        eprint("Build failed: " + str(e))
+        sys.exit(1)
+else:
+    # do everything locally
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        if options.verbose:
+            print("Cloning {} to {}".format(options.remote, tmpdirname))
+        # clone remote repo to tmpdir
+        repo = git.Repo.clone_from(options.remote, tmpdirname)
+        if repo is None:
+            eprint("Failed to clone repository")
+            sys.exit(1)
+        if not branch in repo.remotes['origin'].refs:
+            eprint("Branch {} does not exist in repository".format(branch))
+            sys.exit(1)
+        # checkout the branch we want to build
+        ref = repo.remotes['origin'].refs[branch]
+        repo.create_head(branch, ref)
+        repo.heads[branch].set_tracking_branch(ref)
+        repo.heads[branch].checkout()
+        version = repo.head.commit.hexsha
+        solverVersion = branch + "-" + version
+        stdout_target = None
+        if not options.verbose:
+            stdout_target = subprocess.DEVNULL
+        # run config script and make
+        try:
+            subprocess.check_call(["python", "scripts/mk_make.py"], stdout=stdout_target, cwd=tmpdirname)
+            subprocess.check_call(["make", "-j", options.jobs], stdout=stdout_target, cwd=os.path.join(tmpdirname, "build"))
+        except subprocess.CalledProcessError as e:
+            eprint("Failed to compile Z3.")
+            sys.exit(1)
+        # now we should have a Z3 binary at tmpdirname/build/z3
+        # so, we should be able to call new-solver.py to register it
+        try:
+            subprocess.check_call(["./new-solver.py", options.solverName, solverVersion, os.path.join(tmpdirname, "build", "z3")], stdout=stdout_target, cwd=scriptbase)
+        except subprocess.CalledProcessError as e:
+            eprint("Failed to register solver.")
+            sys.exit(1)
+        if options.build_only:
+            sys.exit(0)
+    # tmpdir is now deleted.
+
+    # now run tests
+    try:
+        subprocess.check_call(["./run-solver.py", options.solverName, solverVersion, "all", options.testargs], stdout=stdout_target, cwd=scriptbase)
+    except subprocess.CalledProcessError as e:
+        eprint("An error occurred while running tests.")
+        sys.exit(1)
