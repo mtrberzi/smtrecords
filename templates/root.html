@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Overview{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+Welcome to SMTrecords.
+<br />
+We currently have records of {{ nRuns }} runs over {{ nBenchmarks }} benchmarks and {{ nVersions }} versions of {{ nSolvers }} different solvers.
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block header %}
+<h1>{% block title %}Run Details{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+{% if run %}
+Details of run #{{run.id}}
+<br />
+Benchmark {{run.benchmark.name}}
+<br />
+Solver {{run.solver_version.solver.name}}-{{run.solver_version.version}}
+<br />
+Started {{run.startdate}}
+<br />
+Total time {{run.displayTime()}}
+<br />
+{{run.displayCaseStatus()}}
+<br />
+{% if cactus_plot %}
+<img src="data:image/png;base64,{{cactus_plot}}">
+{% endif %}
+{% else %}
+No run with the specified ID was found.
+{% endif %}
+{% endblock %}

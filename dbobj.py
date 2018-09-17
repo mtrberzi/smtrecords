@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -5,7 +7,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Boolean, T
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
-import config
+from . import config
 
 def mk_engine():
     connection_string = "%s://%s:%s@%s/%s" % (config.dbtype, config.username, config.password, config.dbhost, config.dbname)
@@ -92,6 +94,44 @@ class Run(Base):
 
     benchmark = relationship("Benchmark", back_populates="runs")
     solver_version = relationship("SolverVersion", back_populates="runs")
+
+    def displayTime(self):
+        totalTime = 0 # milliseconds, integer
+        totalTimeWithoutTimeouts = 0 # milliseconds, integer
+        for r in self.results:
+            totalTime += r.completion_time
+            if r.solver_status != 'timeout':
+                totalTimeWithoutTimeouts += r.completion_time
+        timeF = float(totalTime) / 1000.0
+        timeNoTimeoutF = float(totalTimeWithoutTimeouts) / 1000.0
+        timeDisplay = "({:.3f}s | {:.3f}s+T/O)".format(timeNoTimeoutF, timeF)
+        return timeDisplay
+
+    def displayCaseStatus(self):
+        nSAT = 0
+        nUNSAT = 0
+        nTIMEOUT = 0
+        nUNKNOWN = 0
+        nERROR = 0
+        nINC = 0
+        for r in self.results:
+            if r.complete == False:
+                nINC += 1
+                continue
+            if r.solver_status == 'sat':
+                nSAT += 1
+            elif r.solver_status == 'unsat':
+                nUNSAT += 1
+            elif r.solver_status == 'timeout':
+                nTIMEOUT += 1
+            elif r.solver_status == 'unknown':
+                nUNKNOWN += 1
+            else:
+                nERROR += 1
+        caseDisplay = "<SAT:{} UNSAT:{} T/O:{} UNK:{} ERR:{}>".format(nSAT, nUNSAT, nTIMEOUT, nUNKNOWN, nERROR)
+        if not self.complete:
+            caseDisplay += " <Incomplete: {}>".format(nINC)
+        return caseDisplay
 
 Benchmark.runs = relationship("Run", order_by=Run.id, back_populates="benchmark", cascade="all, delete, delete-orphan")
 SolverVersion.runs = relationship("Run", order_by=Run.id, back_populates="solver_version", cascade="all, delete, delete-orphan")

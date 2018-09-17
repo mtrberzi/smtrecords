@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block header %}
+<h1>{% block title %}Runs{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+Showing {{ desc }}.
+<br />
+{% if runs %}
+{% for run in runs %}
+<a href="{{url_for('show_run', runID=run.id)}}">#{{run.id}} {{run.benchmark.name}} {{run.solver_version.solver.name}}-{{run.solver_version.version}}</a> {{run.startdate}} {{run.command_line}}
+<br />
+{% endfor %}
+{% else %}
+No runs found.
+{% endif %}
+{% endblock %}

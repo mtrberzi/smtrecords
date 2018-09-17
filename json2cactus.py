@@ -109,10 +109,13 @@ def data2png(raw_data, title):
 
     # save the graph
     pyplot.savefig(path, bbox_extra_artists=(lgd,), bbox_inches='tight')
+    pyplot.gcf().clear()
 
     # read the graph back
     with open(path, 'rb') as graph_file:
         png = graph_file.read()
+
+    os.remove(path)
 
     return png
 
