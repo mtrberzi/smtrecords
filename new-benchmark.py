@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-import dbobj
-import config
+from smtrecords import dbobj, config
 
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
@@ -81,12 +80,12 @@ benchmark = dbobj.Benchmark(name=name, path=remotepath)
 
 if config.remotecopy:
 
-    print("Opening connection to %s for file transfer" % (config.dbhost,))
+    print("Opening connection to %s for file transfer" % (config.remotehost,))
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     try:
-        ssh.connect(config.dbhost)
+        ssh.connect(config.remotehost)
     except paramiko.BadHostKeyException as e:
         print("Bad host key:")
         print(e)

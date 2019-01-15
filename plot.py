@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-import dbobj
-import config
+from smtrecords import dbobj, config
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 import sys

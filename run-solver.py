@@ -2,8 +2,7 @@
 
 from __future__ import absolute_import
 
-import dbobj
-import config
+from smtrecords import dbobj, config
 
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
@@ -15,7 +14,7 @@ import os.path
 #from celery import Celery
 #import tasks
 
-import runmanagement
+#import runmanagement
 
 # Note that this command isn't idempotent; it's perfectly fair to run the same version of a solver
 # on a benchmark multiple times.

@@ -10,9 +10,9 @@ import signal
 import fcntl
 
 from antlr4 import *
-from SmtLib25Lexer import SmtLib25Lexer
-from SmtLib25Parser import SmtLib25Parser
-from SmtLib25Visitor import SmtLib25Visitor
+from smtrecords.SmtLib25Lexer import SmtLib25Lexer
+from smtrecords.SmtLib25Parser import SmtLib25Parser
+from smtrecords.SmtLib25Visitor import SmtLib25Visitor
 
 class ResponseVisitor(SmtLib25Visitor):
     def __init__(self):

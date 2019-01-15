@@ -1,4 +1,4 @@
-# global system config
+## global system config
 
 # This creates a sqlalchemy connection string;
 # modify this as necessary.
@@ -9,20 +9,28 @@
 # a high-quality database server.
 
 dbtype = "sqlite"
-username = ""
-password = ""
-dbhost = ""
-dbname = "/work/smtrecords.sqlite"
+username = "strings"
+password = "swordfish"
+dbhost = "localhost"
+dbname = "strings"
+
+# global paths for work files
 
 workbase = "/work"
+benchmarkbase = "/work/benchmarks"
 solverbase = "/work/solvers"
 validationsolverbase = "/work/validation_solvers"
 
-# per-host config
+# Activate cluster mode if set to True.
+# Celery workers must be configured and available.
+
+usecluster = False
+
+## per-host config
 
 # set remotecopy to True if the work directory lives on a remote host;
 # solvers/benchmarks/etc. will be copied over SSH (SCP) to a machine
 # with access to workbase
 remotecopy = False
-remotehost = "example.net"
+remotehost = "fileserver"
 remoteusername = "nobody"

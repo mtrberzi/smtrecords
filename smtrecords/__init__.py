@@ -1,0 +1,1 @@
+from .celeryapp import app
