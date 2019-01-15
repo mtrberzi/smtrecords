@@ -39,7 +39,7 @@ for sID in sys.argv[2:]:
     if result is None:
         print("Run #{} does not exist in the database.".format(nID))
         sys.exit(1)
-    if not result.complete:
+    if not result.complete and False:
         print("Run #{} is incomplete and can't be plotted.".format(nID))
         sys.exit(1)
     # if we have more than one run, make sure they're all from the same benchmark

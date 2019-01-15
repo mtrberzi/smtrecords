@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block header %}
+<h1>{% block title %}Benchmarks{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+Showing all benchmarks.
+<br />
+{% if benchmarks %}
+{% for benchmark in benchmarks %}
+<a href="{{url_for('show_benchmark',bmID=benchmark.id)}}">#{{benchmark.id}} {{benchmark.name}}</a> {{benchmark.cases|length}} cases<br />
+{% endfor %}
+{% endif %}
+{% endblock %}

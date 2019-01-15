@@ -59,6 +59,16 @@ app = Flask(__name__)
 app.teardown_appcontext(close_db_session)
 ##
 
+@app.route('/benchmarks')
+def all_benchmarks():
+    session = get_db_session()
+    benchmarks = session.query(dbobj.Benchmark).order_by(dbobj.Benchmark.id).all()
+    return render_template('benchmarks.html', benchmarks=benchmarks)
+
+@app.route('/benchmark/<int:bmID>')
+def show_benchmark(bmID):
+    return "???"
+
 @app.route('/run/<int:runID>')
 def show_run(runID):
     session = get_db_session()

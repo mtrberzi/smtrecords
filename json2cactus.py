@@ -72,7 +72,8 @@ def data2png(raw_data, title):
     min_x = 0
     max_x = max(len(points) for points in groomed_data)
     min_y = 0
-    max_y = max(max(point['elapsed'] for point in points) for points in groomed_data)
+    fixempty = lambda x : x if len(x) > 0 else [{'elapsed': 0.0}]
+    max_y = max(max(point['elapsed'] for point in fixempty(points)) for points in groomed_data)
 
     # set axis limits
     pyplot.axis([min_x, max_x, min_y, max_y])
