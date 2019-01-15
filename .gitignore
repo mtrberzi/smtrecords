@@ -3,3 +3,6 @@ __pycache__/**
 smtrecords/__pycache__/**
 config.py
 celeryconfig.py
+smtrecords/config.py
+smtrecords/celeryconfig.py
+
