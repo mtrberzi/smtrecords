@@ -2,7 +2,7 @@
 
 from __future__ import absolute_import
 
-from smtrecords import dbobj, config
+from smtrecords import dbobj, config, runmanagement
 
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker

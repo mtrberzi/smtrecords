@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
 from __future__ import absolute_import
-from smtrecords import dbobj, config
+from smtrecords import dbobj, config, runmanagement
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 import sys
-import runmanagement
 
 if len(sys.argv) != 2:
     print("Usage: {} run-id".format(sys.argv[0]))

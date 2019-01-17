@@ -1,5 +1,4 @@
-import dbobj
-import config
+from . import dbobj, config, tasks
 
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
@@ -8,8 +7,6 @@ import sys
 import os
 import os.path
 import platform
-
-import tasks
 
 # report(run):
 # takes a Run DB Object and prints to stdout a report on its status
