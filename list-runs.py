@@ -72,6 +72,7 @@ for run in runs:
         nINC = 0
         totalTime = 0 # milliseconds, integer
         totalTimeWithoutTimeouts = 0 # milliseconds, integer
+        nInvalid = 0
         for r in run.results:
             if r.complete == False:
                 nINC += 1
@@ -90,11 +91,18 @@ for run in runs:
             totalTime += r.completion_time
             if r.solver_status != 'timeout':
                 totalTimeWithoutTimeouts += r.completion_time
+            for v in r.validation_results:
+                if v.success_status and (not v.pass_status):
+                    nInvalid += 1
         caseDisplay = "<SAT:{} UNSAT:{} T/O:{} UNK:{} ERR:{}>".format(nSAT, nUNSAT, nTIMEOUT, nUNKNOWN, nERROR)
         if not run.complete:
             caseDisplay += " <Incomplete: {}>".format(nINC)
         timeF = float(totalTime) / 1000.0
         timeNoTimeoutF = float(totalTimeWithoutTimeouts) / 1000.0
         timeDisplay = "({:.3f}s | {:.3f}s+T/O)".format(timeNoTimeoutF, timeF)
-        print("#{} {} {}-{} {} {} {} {}".format(run.id, run.benchmark.name, run.solver_version.solver.name, run.solver_version.version, run.startdate, timeDisplay, caseDisplay, run.command_line))
+        if nInvalid > 0:
+            validationBadge = "***INVALID:{}***".format(nInvalid)
+        else:
+            validationBadge = ""
+        print("#{} {} {}-{} {} {} {} {} {}".format(run.id, run.benchmark.name, run.solver_version.solver.name, run.solver_version.version, run.startdate, timeDisplay, caseDisplay, validationBadge, run.command_line))
 
