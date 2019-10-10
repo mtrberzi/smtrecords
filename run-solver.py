@@ -10,6 +10,7 @@ from sqlalchemy.orm.exc import MultipleResultsFound
 import sys
 import os
 import os.path
+import datetime
 
 #from celery import Celery
 #import tasks
@@ -47,7 +48,7 @@ benchmark = None
 runAllBenchmarks = (benchmarkName == 'all')
 
 try:
-    solver = session.query(dbobj.Solver, dbobj.SolverVersion).filter(dbobj.Solver.id == dbobj.SolverVersion.solver_id, dbobj.Solver.name == solverName, dbobj.SolverVersion.version == solverVersionName).one_or_none()
+    solver = session.query(dbobj.Solver, dbobj.SolverVersion).filter(dbobj.Solver.id == dbobj.SolverVersion.solver_id, dbobj.Solver.name == solverName, dbobj.SolverVersion.version.like(solverVersionName + '%')).one_or_none()
     if solver is None:
         print("No solver %s with version %s was found." % (solverName, solverVersionName))
         session.rollback()
@@ -77,7 +78,7 @@ if runAllBenchmarks:
     runs = []
     for benchmark in allBenchmarks:
         # create Run object
-        solverRun = dbobj.Run(benchmark=benchmark, solver_version=solver, command_line=" ".join(solverArguments), complete=False)
+        solverRun = dbobj.Run(benchmark=benchmark, solver_version=solver, command_line=" ".join(solverArguments), complete=False, startdate=datetime.datetime.utcnow())
         runs.append(solverRun)
         # create a Result object for each case
         for benchmarkCase in benchmark.cases:
@@ -88,7 +89,7 @@ if runAllBenchmarks:
         runmanagement.resume(session, run)
 else:
     # create Run object
-    solverRun = dbobj.Run(benchmark=benchmark, solver_version=solver, command_line=" ".join(solverArguments), complete=False)
+    solverRun = dbobj.Run(benchmark=benchmark, solver_version=solver, command_line=" ".join(solverArguments), complete=False, startdate=datetime.datetime.utcnow())
     # create a Result object for each case
     for benchmarkCase in benchmark.cases:
         result = dbobj.RunResult(run = solverRun, case = benchmarkCase, complete=False, solver_status=None, solver_output=None, solver_stderr=None, completion_time=None, hostname=None)

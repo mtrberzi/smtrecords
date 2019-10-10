@@ -27,8 +27,8 @@ class Benchmark(Base):
     __tablename__ = 'benchmarks'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
-    path = Column(String, nullable=False)
+    name = Column(String(256), nullable=False)
+    path = Column(String(4096), nullable=False)
 
     def __repr__(self):
         return "<Benchmark(name='%s', path='%s')>" % (self.name, self.path)
@@ -40,9 +40,9 @@ class Case(Base):
 
     id = Column(Integer, primary_key=True)
     benchmark_id = Column(Integer, ForeignKey('benchmarks.id'))
-    path = Column(String, nullable=False)
-    checksum = Column(String,nullable=True)
-    status = Column(String,nullable=True)
+    path = Column(String(4096), nullable=False)
+    checksum = Column(String(512),nullable=True)
+    status = Column(String(128),nullable=True)
 
     benchmark = relationship("Benchmark", back_populates="cases") 
 
@@ -57,7 +57,7 @@ class Solver(Base):
     __tablename__ = 'solvers'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
+    name = Column(String(256), nullable=False)
 
     def __repr__(self):
         return "<Solver(%s)>" % (self.name,)
@@ -70,10 +70,10 @@ class SolverVersion(Base):
 
     id = Column(Integer, primary_key=True)
     solver_id = Column(Integer, ForeignKey('solvers.id'))
-    version = Column(String, nullable=False)
-    path = Column(String, nullable=True)
-    creationdate = Column(DateTime(timezone=False), server_default=func.now())
-    checksum = Column(String, nullable=True)
+    version = Column(String(256), nullable=False)
+    path = Column(String(4096), nullable=True)
+    creationdate = Column(DateTime(timezone=False))
+    checksum = Column(String(512), nullable=True)
 
     solver = relationship("Solver", back_populates="versions")
 
@@ -89,10 +89,10 @@ class Run(Base):
     __tablename__ = 'runs'
 
     id = Column(Integer, primary_key=True)
-    startdate = Column(DateTime(timezone=False), server_default=func.now())
+    startdate = Column(DateTime(timezone=False))
     benchmark_id = Column(Integer, ForeignKey('benchmarks.id'))
     solver_version_id = Column(Integer, ForeignKey('solverversions.id'))
-    command_line = Column(String, nullable=False)
+    command_line = Column(String(4096), nullable=False)
     complete = Column(Boolean, nullable=False, default=False)
 
     benchmark = relationship("Benchmark", back_populates="runs")
@@ -150,11 +150,11 @@ class RunResult(Base):
     run_id = Column(Integer, ForeignKey('runs.id'))
     case_id = Column(Integer, ForeignKey('cases.id'))
     complete = Column(Boolean, default=False)
-    solver_status = Column(String, nullable=True)
+    solver_status = Column(String(128), nullable=True)
     solver_output = Column(Text, nullable=True)
     solver_stderr = Column(Text, nullable=True)
     completion_time = Column(Integer, nullable=True, default=0)
-    hostname = Column(String, nullable=True)
+    hostname = Column(String(256), nullable=True)
 
     run = relationship("Run", back_populates="results")
     case = relationship("Case", back_populates="results")
@@ -169,10 +169,10 @@ class ValidationSolver(Base):
     __tablename__ = 'validationsolvers'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
-    path = Column(String, nullable=False)
-    checksum = Column(String, nullable=True)
-    command_line = Column(String, nullable=False, default="")
+    name = Column(String(256), nullable=False)
+    path = Column(String(4096), nullable=False)
+    checksum = Column(String(512), nullable=True)
+    command_line = Column(String(4096), nullable=False, default="")
 
     def __repr__(self):
         return "<ValidationSolver(%s)>" % (self.name, )
@@ -193,7 +193,7 @@ class ValidationResult(Base):
     running_status = Column(Boolean, default=False)
     success_status = Column(Boolean, default=False)
     pass_status = Column(Boolean, default=False)
-    response = Column(String, default="")
+    response = Column(String(4096), default="")
 
     result = relationship("RunResult", back_populates="validation_results")
     validation_solver = relationship("ValidationSolver")

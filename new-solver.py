@@ -14,6 +14,7 @@ import hashlib
 if config.remotecopy:
     import paramiko
 
+import datetime
 import dateutil.parser
 import shutil
 
@@ -41,6 +42,8 @@ solverpath = sys.argv[3]
 creationDate = None
 if len(sys.argv) == 5:
     creationDate = dateutil.parser.parse(sys.argv[4])
+else:
+    creationDate = datetime.datetime.utcnow()
 
 engine = dbobj.mk_engine()
 Session = sessionmaker(bind=engine)

@@ -75,7 +75,7 @@ if session.query(dbobj.Benchmark).filter(dbobj.Benchmark.name == name).count() >
     print("Benchmark '" + name + "' already exists.")
     sys.exit(1)
 
-remotepath = "/work/benchmarks/%s" % (name,)
+remotepath = config.workbase + "/benchmarks/%s" % (name,)
 benchmark = dbobj.Benchmark(name=name, path=remotepath)
 
 if config.remotecopy:
